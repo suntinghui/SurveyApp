@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>安全帽</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+
+		<style>
+			.img {
+				width: 50%;
+				height: 50%;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<h1 id="title" class="mui-title">机房现场勘查系统</h1>
+		</header>
+
+		<div class="mui-content">
+			<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: rgba(255,255,255,0); margin-top: 20px;">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="border-width: 0px;">
+					<a href="javascript:void(0)" id="basicInfo.html">
+						<img src="../img/icon_1.png" class="img" />
+						<div class="mui-media-body">基本信息</div>
+					</a>
+					<span id="DocHandingCount" class="mui-badge mui-badge-danger" style="margin-top: -30px; margin-right: 5px; visibility: hidden; ">0</span>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="border-width: 0px;">
+					<a href="javascript:void(0)" id="computerRoomInfo.html">
+						<img src="../img/icon_2.png" class="img" />
+						<div class="mui-media-body">机房信息</div>
+					</a>
+					<span id="MemoHandingCount" class="mui-badge mui-badge-danger" style="margin-top: -30px; margin-right: 5px; visibility: hidden; ">0</span>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="border-width: 0px;">
+					<a href="javascript:void(0)" id="batteryInfo.html">
+						<img src="../img/icon_3.png" class="img" />
+						<div class="mui-media-body">配电信息</div>
+					</a>
+					<span id="FlowHandingCount" class="mui-badge mui-badge-danger" style="margin-top: -30px; margin-right: 5px; visibility: hidden; ">0</span>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="border-width: 0px;">
+					<a href="javascript:void(0)" id="deviceInfo.html">
+						<img src="../img/icon_4.png" class="img" />
+						<div class="mui-media-body">主设备信息</div>
+					</a>
+					<span id="NoReadPassReadCount" class="mui-badge mui-badge-danger" style="margin-top: -30px; margin-right: 5px; visibility: hidden; ">0</span>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="border-width: 0px;">
+					<a href="javascript:void(0)" id="airConditionInfo.html">
+						<img src="../img/icon_5.png" class="img" />
+						<div class="mui-media-body">制冷设备</div>
+					</a>
+					<span id="NoReadPassReadCount" class="mui-badge mui-badge-danger" style="margin-top: -30px; margin-right: 5px; visibility: hidden; ">0</span>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="border-width: 0px;">
+					<a href="javascript:void(0)" id="setting.html">
+						<img src="../img/icon_6.png" class="img" />
+						<div class="mui-media-body">系统设置</div>
+					</a>
+					<span id="NoReadFlowNotifyCount" class="mui-badge mui-badge-danger" style="margin-top: -30px; margin-right: 5px; visibility: hidden; ">0</span>
+				</li>
+			</ul>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/constants.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/badge.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			mui.init({
+				keyEventBind: {
+					backbutton: false //关闭back按键监听
+				}
+			});
+
+			window.onload = function() {
+
+				//window.setTimeout(requestBadge, 1000);
+
+				//window.setTimeout(requestCheckNewVersion, 2000);
+			};
+
+			// 宫格点击事件
+			mui('.mui-grid-view').on('tap', 'a', function(e) {
+				var id = this.getAttribute("id");
+				if(id == null) {
+					mui.toast("建设中，请稍候...");
+					return;
+				}
+
+				mui.openWindow({
+					url: id,
+					id: id,
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+				});
+			});
+
+			function requestCheckNewVersion() {
+				checkNetwork();
+				/**
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在检查新版本...");
+				});
+				**/
+
+				var url = getHost() + "Identity.ashx?Commond=CheckNewVer";
+				mui.ajax(url, {
+					dataType: 'json',
+					type: 'get',
+					timeout: TIMEOUT,
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						mui.plusReady(function() {
+							plus.nativeUI.closeWaiting(); //这里监听页面是否加载完毕，完成后关闭等待框
+						});
+
+						responseCheckNewVersion(data);
+					},
+					error: function(xhr, type, errorThrown) {
+						mui.plusReady(function() {
+							plus.nativeUI.closeWaiting(); //这里监听页面是否加载完毕，完成后关闭等待框
+						});
+
+						mui.alert(getHttpErrorDesp(type), "提示", null);
+					}
+				});
+			}
+
+			function responseCheckNewVersion(resp) {
+				try {
+					var newVer = resp.newversion;
+					if((newVer - 0) > (VersionCode - 0)) {
+						mui.confirm('有新版本需要立即更新吗？', '检测到新版本', ['取消', '确认'], function(e) {
+							if(e.index == 1) {
+								plus.runtime.openURL(FIR_LINK);
+							}
+						})
+					}
+				} catch(e) {
+					console.log(e);
+				}
+			};
+
+			window.addEventListener('requestBadge', function(event) {
+				requestBadge();
+			});
+
+			function refreshBadge(resp) {
+				var meetingBadge = document.getElementById('meetingBadge');
+				meetingBadge.innerHTML = resp.NewMeetingCount;
+				meetingBadge.style.visibility = (resp.NewMeetingCount == 0 ? "hidden" : "visible");
+
+				var todofileBadge = document.getElementById('todofileBadge');
+				todofileBadge.innerHTML = resp.DocHandingCount;
+				todofileBadge.style.visibility = (resp.DocHandingCount == 0 ? "hidden" : "visible");
+
+				var flowmanagerBadge = document.getElementById('flowmanagerBadge');
+				flowmanagerBadge.innerHTML = resp.FlowHandingCount;
+				flowmanagerBadge.style.visibility = (resp.FlowHandingCount == 0 ? "hidden" : "visible");
+
+				var noticeBadge = document.getElementById('noticeBadge');
+				noticeBadge.innerHTML = resp.NewNoticeCount;
+				noticeBadge.style.visibility = (resp.NewNoticeCount == 0 ? "hidden" : "visible");
+
+				var todoreadBadge = document.getElementById('todoreadBadge');
+				todoreadBadge.innerHTML = resp.DocReadingCount;
+				todoreadBadge.style.visibility = (resp.DocReadingCount == 0 ? "hidden" : "visible");
+
+				var reportBadge = document.getElementById('reportBadge');
+				reportBadge.innerHTML = resp.NewReportCount;
+				reportBadge.style.visibility = (resp.NewReportCount == 0 ? "hidden" : "visible");
+
+				var informationBadge = document.getElementById('informationBadge');
+				informationBadge.innerHTML = resp.NewInformationCount;
+				informationBadge.style.visibility = (resp.NewInformationCount == 0 ? "hidden" : "visible");
+			}
+		</script>
+
+	</body>
+
+</html>

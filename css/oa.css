@@ -1,0 +1,51 @@
+html,
+body {
+	height: 100%;
+	background-color: #efeff4;
+	font-family: "微软雅黑";
+}
+
+.mui-segmented-control-yao {
+	border: 1px solid #7DA9CA;
+}
+
+.mui-segmented-control-yao .mui-control-item {
+	color: #4A87B6;
+	/*字体颜色要清晰一些*/
+	border-color: inherit;
+}
+
+.mui-segmented-control-yao .mui-control-item.mui-active {
+	color: #fff;
+	background: -webkit-linear-gradient(top, #7DA9CA, #4A87B6, #7DA9CA);
+}
+
+.mui-segmented-control-yao.mui-segmented-control-inverted .mui-control-item.mui-active {
+	color: #7DA9CA;
+	border-bottom: 2px solid #7DA9CA;
+	background: none;
+}
+
+.mui-segmented-control-negative.mui-segmented-control-inverted~.mui-slider-progress-bar {
+	background-color: #7DA9CA;
+}
+
+
+/*------*/
+
+.navbar {
+	/*background: -webkit-gradient(linear, center top, center bottom, from(#FFFFFF), to(#E3E3E3));*/
+	background: #FFFFFF;
+}
+
+.tabbar {
+	background: #FFFFFF;
+}
+
+.oabtn {
+	background: -webkit-linear-gradient(top, #7DA9CA, #4A87B6, #7DA9CA);
+}
+
+.backbtn {
+	color: #4A87B6;
+}

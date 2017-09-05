@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">配电信息</h1>
+		</header>
+
+		<div class="mui-content">
+
+			<div class="desc">电池1</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">电池型号</div>
+					<div class="item-value mui-input-row">
+						<input type="text" placeholder="请输入电池型号">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">电池数量</div>
+					<div class="item-value mui-input-row">
+						<input type="text" placeholder="单位组">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">每组块数</div>
+					<div class="item-value mui-input-row">
+						<input type="text" placeholder="每组有多少块电池">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">安装位置</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入电池安装位置">
+					</div>
+				</div>
+			</div>
+
+			<div class="desc">电池2</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">电池型号</div>
+					<div class="item-value mui-input-row">
+						<input type="text" placeholder="请输入电池型号">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">电池数量</div>
+					<div class="item-value mui-input-row">
+						<input type="text" placeholder="单位组">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">每组块数</div>
+					<div class="item-value mui-input-row">
+						<input type="text" placeholder="每组有多少块电池">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">安装位置</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入电池安装位置">
+					</div>
+				</div>
+			</div>
+
+			<div style="margin: 20px 10px;">
+				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			});
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}, false);
+		</script>
+	</body>
+
+</html>

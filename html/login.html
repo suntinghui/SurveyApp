@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>安全帽</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/oa.css" />
+
+		<style>
+			.mui-content {
+				height: 100%;
+				background-image: url(../img/home_bg.png);
+			}
+			
+			#topimg {
+				margin: 30px auto;
+				height: 70px;
+			}
+			
+			#contentDiv {
+				background-color: rgba(255, 255, 255, 0.95);
+				padding: 3% 3% 15% 0%;
+				margin: auto 3%;
+				border: 2px solid;
+				border-color: #FFFFFF;
+				border-radius: 10px;
+			}
+			
+			#loginBtn {
+				border: none;
+				padding-top: 10px;
+				padding-bottom: 10px;
+				font-size: 17px;
+			}
+			
+			.link-area {
+				display: block;
+				margin-top: 20px;
+				text-align: center;
+			}
+			
+			.spliter {
+				color: #bbb;
+				padding: 0px 8px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div class="mui-content" style="padding-top: 35%;">
+			<div id="contentDiv">
+
+				<div class="mui-input-row">
+					<label style="font-size: 16px; font-family: '微软雅黑';">&nbsp;账号：</label>
+					<input id='userNameText' type="text" class="mui-input-clear mui-input" placeholder="请输入账号" style="font-size: 16px;">
+				</div>
+
+				<div id="line" style="margin: 1px 0px 5px 10px; background: lightgrey; height: 1px;"> </div>
+
+				<div class="mui-input-row" style="margin-top: 15px;">
+					<label style="font-size: 16px;font-family: '微软雅黑';">&nbsp;密码：</label>
+					<input id='passwordText' type="password" class="mui-input-password mui-input" placeholder="请输入密码" style="font-size: 16px;">
+				</div>
+
+				<div id="line" style="margin: 1px 0px 5px 10px; background: lightgrey; height: 1px;"></div>
+
+				<div id="auto" style="margin-top: 20px;">
+					<div class="mui-checkbox mui-left" style=" float: left;" id="savepwdDiv">
+						<label style="color: black; margin-top: 5px; font-size: 16px;font-family: '微软雅黑';">记住密码</label>
+						<input name="savepwd" value="savepwd" type="checkbox" id="savepwd">
+					</div>
+
+					<div class="mui-checkbox mui-left" style="float: right;" id="autologinDiv">
+						<label style="color: black; margin-top: 5px; font-size: 16px;font-family: '微软雅黑';">自动登录</label>
+						<input name="autologin" value="autologin" type="checkbox" id="autologin">
+					</div>
+
+				</div>
+			</div>
+
+			<div style="padding: 5%; margin-top: 20px;">
+				<button id='loginBtn' class="mui-btn mui-btn-block mui-btn-primary oabtn">登&nbsp;&nbsp;&nbsp;录</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/constants.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/util.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			var userNameText = document.getElementById("userNameText");
+			var passwordText = document.getElementById("passwordText");
+			var savepwdDiv = document.getElementById('savepwdDiv');
+			var savepwd = document.getElementById('savepwd');
+			var autologinDiv = document.getElementById('autologinDiv');
+			var autologin = document.getElementById('autologin');
+			var loginBtn = document.getElementById("loginBtn");
+
+			// 初始化参数 
+			userNameText.value = window.localStorage.getItem(SaveUserName);
+			passwordText.value = window.localStorage.getItem(SavePwd);
+			autoLoginCheck(window.localStorage.getItem(CheckAutoLogin) == 'true');
+			savepwd.checked = (window.localStorage.getItem(CheckSavePwd) == 'true');
+
+			window.onload = function() {
+				if(window.localStorage.getItem(CheckAutoLogin) == 'true') {
+					window.setTimeout(loginReq, 2000);
+				}
+			};
+
+			loginBtn.addEventListener("tap", function(event) {
+				//loginReq();
+				openMainPage();
+			}, false);
+
+			var checkInput = function() {
+				if(userNameText.value.length == 0) {
+					mui.toast("请输入用户名");
+					return false;
+				}
+
+				if(passwordText.value.length == 0) {
+					mui.toast("请输入密码");
+					return false;
+				}
+
+				return true;
+			}
+
+			var loginReq = function() {
+				checkNetwork();
+
+				if(!checkInput())
+					return;
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在登录...");
+
+					var pushInfo = plus.push.getClientInfo();
+
+					var argus = "&loginName=" + userNameText.value + "&loginPwd=" + passwordText.value + "&deviceId=" + plus.device.uuid + "&clientid=" + pushInfo.clientid;
+					var url = getHost() + "Identity.ashx?Commond=AppLogin" + argus;
+					console.log(url);
+
+					mui.ajax(url, {
+						dataType: 'json',
+						type: 'get',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseLogin(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+
+			} // end loginReq
+
+			function responseLogin(resp) {
+				console.log('登录响应：' + JSON.stringify(resp));
+
+				switch(resp.LoginResult - 0) {
+					case 0:
+						// 保存用户信息
+						window.localStorage.setItem(TokenKey, resp.TokenKey);
+						window.localStorage.setItem(UserName, resp.UserName);
+						window.localStorage.setItem(LoginName, resp.LoginName);
+
+						// 保存登录用户名
+						window.localStorage.setItem(SaveUserName, userNameText.value);
+						window.localStorage.setItem(CheckSavePwd, savepwd.checked);
+						window.localStorage.setItem(CheckAutoLogin, autologin.checked);
+						if(savepwd.checked) {
+							window.localStorage.setItem(SavePwd, passwordText.value);
+						} else {
+							window.localStorage.setItem(SavePwd, '');
+						}
+
+						openMainPage();
+
+						break;
+
+					case 1:
+						mui.alert("账户不存在", "提示", null);
+						break;
+
+					case 2:
+						mui.alert("密码错误", "提示", null);
+						break;
+
+					case 3:
+						mui.alert("没有移动办公权限", "提示", null);
+						break;
+
+					case 4:
+						mui.alert("无效的移动端设备", "提示", null);
+						break;
+
+					case 5:
+						mui.alert("设备与账号不匹配", "提示", null);
+						break;
+
+					case 6:
+						mui.alert("该设备已被禁用", "提示", null);
+						break;
+
+					default:
+						mui.alert("登录失败，未知异常", "提示", null);
+						break;
+				}
+			}
+
+			function openMainPage() {
+				mui.openWindow({
+					url: 'main.html',
+					id: "main.html", // 该id在刷新上有使用，不可更改
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: true, //自动显示等待框，默认为true
+						title: '正在登录...',
+					}
+				});
+			}
+
+			mui('#autologinDiv').on('change', 'input', function() {
+				autoLoginCheck(this.checked);
+			});
+
+			function autoLoginCheck(checked) {
+				savepwd.checked = checked;
+				autologin.checked = checked;
+
+				if(checked) {
+					savepwd.disabled = 'disabled';
+					savepwdDiv.classList.add('mui-disabled');
+				} else {
+					savepwd.disabled = '';
+					savepwdDiv.classList.remove('mui-disabled');
+				}
+			};
+		</script>
+
+	</body>
+
+</html>

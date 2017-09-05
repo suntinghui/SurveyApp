@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">机房信息</h1>
+		</header>
+
+		<div class="mui-content">
+
+			<div class="desc">基本信息</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">所属楼层</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入所属楼层">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">总楼层数</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入总楼层数">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">门窗朝向</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入门窗朝向">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">冷墙数量</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入冷墙数量">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">冷墙朝向</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入冷墙朝向">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="desc">面积信息</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机房面积</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="单位平米">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机房长度</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="单位米">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机房宽度</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="单位米">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机房净高</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="单位米">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">说明</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入说明">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="desc">走线架距地板高度</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">上走线架</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="单位毫米">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">下走线架</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="单位毫米">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="desc">建筑结构</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">建筑结构</div>
+					<ul class="mui-table-view item-value mui-input-row" style="padding-left: 0px;">
+						<li class="mui-table-view-cell mui-radio mui-left">
+							<input name="radio" type="radio">框架结构
+						</li>
+						<li class="mui-table-view-cell mui-radio mui-left">
+							<input name="radio" type="radio">混凝土浇筑
+						</li>
+					</ul>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">说明</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入说明">
+					</div>
+				</div>
+
+			</div>
+
+			<div style="margin: 20px 10px;">
+				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			});
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}, false);
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">基本信息</h1>
+		</header>
+
+		<div class="mui-content">
+
+			<div class="desc">基本信息</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">客户名称</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入客户名称">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">建筑名称</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入建筑名称">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">建筑地址</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入建筑地址">
+					</div>
+				</div>
+			</div>
+
+			<div class="desc">联系人1</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">姓名</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人姓名">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">职位</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人职位">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">联系电话</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人电话">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">邮箱</div>
+					<div class="item-value">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人电话">
+					</div>
+				</div>
+			</div>
+
+			<div class="desc">联系人2</div>
+			<div class="mui-card mui-table-view">
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">姓名</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人姓名">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">职位</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人职位">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">联系电话</div>
+					<div class="item-value mui-input-row">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人电话">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">邮箱</div>
+					<div class="item-value">
+						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入联系人电话">
+					</div>
+				</div>
+			</div>
+
+			<div style="margin: 20px 10px;">
+				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			});
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}, false);
+		</script>
+	</body>
+
+</html>
