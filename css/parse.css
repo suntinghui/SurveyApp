@@ -17,8 +17,10 @@ input[type="text"] {
 .item-div {
 	/*margin: 20px 20px 20px 5px;*/
 	padding: 15px 0 12px 0;
+	width: 100%;
+	text-align: left;
 	display: -webkit-box;
-	-webkit-box-pack: center;
+	/*-webkit-box-pack: center;*/
 	-webkit-box-align: center;
 	/*border-bottom: solid;
 	border-bottom-width: 1px;
@@ -26,16 +28,16 @@ input[type="text"] {
 }
 
 .item-name {
-	width: 25%;
+	width: 30%;
 	color: #666666;
 	font-size: 15px;
 	text-align: center;
-	margin-right: 10px;
 }
 
 .item-value {
-	width: 70%;
+	width: 65%;
 	color: #333333;
+	margin-right: 20px;
 	font-size: 15px;
 }
 
@@ -113,5 +115,5 @@ input[type="text"] {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	font-size: 17px;
-	background: -webkit-linear-gradient(top, #7DA9CA, #4A87B6, #7DA9CA);
+	background: #0084C8;
 }

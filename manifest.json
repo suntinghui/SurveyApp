@@ -189,5 +189,107 @@
 				}
 			}
 		}
+	},
+	"dependencies": {
+		"pages": {
+			"html/main.html": {
+				"resources": [
+					"img/icon_3.png",
+					"img/icon_2.png",
+					"img/icon_4.png",
+					"js/badge.js",
+					"img/icon_1.png",
+					"img/icon_5.png",
+					"img/icon_6.png",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/basicInfo.html",
+					"html/computerRoomInfo.html",
+					"html/deviceInfo.html",
+					"html/airConditionInfo.html",
+					"html/setting.html"
+				],
+				"priority": 0
+			},
+			"html/login.html": {
+				"resources": [
+					"js/util.js",
+					"js/constants.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"img/home_bg.png",
+					"css/oa.css"
+				],
+				"refer": [
+					"html/main.html"
+				],
+				"priority": 0
+			},
+			"html/basicInfo.html": {
+				"resources": [
+					"css/parse.css",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/computerRoomInfo.html": {
+				"resources": [
+					"css/parse.css",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/airConditionInfo.html": {
+				"resources": [
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/deviceInfo.html": {
+				"resources": [
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/setting.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.poppicker.js",
+					"css/mui.min.css",
+					"css/mui.poppicker.css",
+					"css/mui.picker.css"
+				],
+				"refer": [],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"css/feedback.css",
+				"js/mui.picker.min.js",
+				"img/icon_8.png",
+				"css/iconfont.css",
+				"fonts/iconfont.ttf",
+				"js/mui.js",
+				"js/parse.js",
+				"js/mui.indexedlist.js",
+				"README.md",
+				"js/map.js",
+				"img/nodata.png",
+				"css/mui.css",
+				"css/mui.indexedlist.css",
+				"js/dateutil.js",
+				"js/view.js",
+				"html/batteryInfo.html",
+				"img/icon_7.png",
+				"js/feedback.js"
+			]
+		}
 	}
 }
