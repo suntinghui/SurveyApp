@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		<link rel="stylesheet" href="../css/survey.css" />
+
+		<style>
+			.name {
+				margin: 8px auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<h1 id="title" class="mui-title">机房列表</h1>
+			<img src="../img/add.png" id="addRoom" class="mui-icon mui-icon-right-nav mui-pull-right backbtn" />
+		</header>
+
+		<div class="mui-content">
+
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<div class="mui-navigate-right name">海淀缘溪堂</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-navigate-right name">丰台前门前</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-navigate-right name">昌平新悦家园</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-navigate-right name">朝阳表年汇</div>
+				</li>
+
+			</ul>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+
+			mui('.mui-table-view').on('tap', 'div', function(e) {
+				var roomTitle = this.innerHTML;
+
+				mui.openWindow({
+					url: 'main.html',
+					id: "main.html",
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						roomTitle: roomTitle
+					},
+				});
+			});
+			
+			document.getElementById('addRoom').addEventListener('tap', function(){
+				mui.openWindow({
+					url: 'addComputerRoom.html',
+					id: "addComputerRoom.html",
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					}
+				});
+			}, false);
+		</script>
+	</body>
+
+</html>
