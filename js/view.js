@@ -21,3 +21,39 @@ function closeToMain() {
 		list[i].hide();
 	}
 }
+
+function createUploadImage(id, placeholder) {
+	var li = document.createElement('li');
+	li.className = 'mui-table-view-cell listyle';
+
+	var div1 = document.createElement('div');
+	div1.className = 'item-name';
+	div1.innerHTML = '<img src="../img/placeholder.png" style="height: 45px; " />';
+	li.appendChild(div1);
+
+	var div2 = document.createElement('div');
+	div2.className = 'item-value valuestyle';
+	div2.innerHTML = '<input id="ip" type="text" class="mui-input-clear" placeholder="" value="' + placeholder + '">';
+	li.appendChild(div2);
+
+	div1.addEventListener('tap', function() {
+		galleryImgsSelected(div1);
+	}, false);
+
+	return li;
+}
+
+function galleryImgsSelected(div) {
+	// 从相册中选择图片
+	console.log('从相册中选择多张图片(限定最多选择9张)：');
+	plus.gallery.pick(function(path) {
+		div.getElementsByTagName('img')[0].src = path;
+
+	}, function(e) {
+		console.log('取消选择图片');
+		
+	}, {
+		filter: 'image',
+		multiple: false
+	});
+};

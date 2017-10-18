@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		
+		<style>
+			body {
+				background: #EFEFF4;
+			}
+			
+			.listyle {
+				padding: 10px 5px 15px 0;
+				display: -webkit-box;
+				-webkit-box-pack: center;
+				-webkit-box-align: center;
+			}
+			
+			.valuestyle {
+				width: 70%;
+			}
+			
+			#okBtn {
+				border: none;
+				padding-top: 10px;
+				padding-bottom: 10px;
+				font-size: 17px;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">基本信息</h1>
+		</header>
+
+		<div class="mui-content rootPadding">
+			<ul class="mui-table-view" id="ul">
+
+			</ul>
+
+			<div style="padding: 10px; margin-top: 20px;">
+				<button id='okBtn' class="mui-btn mui-btn-block mui-btn-primary oabtn">开始上传</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js" ></script>
+		
+		<script type="text/javascript">
+			mui.init();
+			
+			window.onload = function(){
+				refreshView();
+			};
+			
+			function refreshView() {
+				var ul = document.getElementById('ul');
+				ul.appendChild(createUploadImage('1','机房与周围环境的照片'));
+				ul.appendChild(createUploadImage('2', '机房入口'));
+				ul.appendChild(createUploadImage('3', '机房门牌'));
+			}
+			
+			document.getElementById('okBtn').addEventListener('tap', function() {
+				mui.alert('上传成功', '提示', function() {
+					mui.back();
+				});
+			}, false);
+			
+		</script>
+
+	</body>
+
+</html>

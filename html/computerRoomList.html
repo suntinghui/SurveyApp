@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>机房列表</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../css/parse.css" />
@@ -18,8 +18,9 @@
 
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<img src="../img/add.png" id="addRoom" class="mui-icon  mui-pull-left backbtn" style="width: 40px;"/>
 			<h1 id="title" class="mui-title">机房列表</h1>
-			<img src="../img/add.png" id="addRoom" class="mui-icon mui-icon-right-nav mui-pull-right backbtn" />
+			<p class="mui-icon mui-pull-right" style="color: deepskyblue; ">4</p>
 		</header>
 
 		<div class="mui-content">
@@ -58,11 +59,11 @@
 					},
 					extras: {
 						roomTitle: roomTitle
-					},
+					}
 				});
 			});
-			
-			document.getElementById('addRoom').addEventListener('tap', function(){
+
+			document.getElementById('addRoom').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'addComputerRoom.html',
 					id: "addComputerRoom.html",
