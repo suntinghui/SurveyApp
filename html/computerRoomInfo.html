@@ -14,6 +14,7 @@
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
 			<h1 id="title" class="mui-title">机房信息</h1>
+			<a id='uploadImage' class="mui-btn mui-btn-link mui-pull-right">照片</a>
 		</header>
 
 		<div class="mui-content rootPadding">
@@ -149,6 +150,22 @@
 			mui.init({
 				swipeBack: true
 			});
+			
+			document.getElementById('uploadImage').addEventListener('tap', function() {
+				var imageList = new Array(['机房全景图']);
+
+				mui.openWindow({
+					url: 'uploadImage.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						imageList: imageList
+					}
+				});
+			}, false);
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.alert('保存成功', '提示', function() {

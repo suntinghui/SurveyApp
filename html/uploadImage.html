@@ -7,73 +7,74 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../css/parse.css" />
-		
+		<link rel="stylesheet" href="../css/oa.css" />
+
 		<style>
 			body {
 				background: #EFEFF4;
 			}
 			
-			.listyle {
-				padding: 10px 5px 15px 0;
-				display: -webkit-box;
-				-webkit-box-pack: center;
-				-webkit-box-align: center;
-			}
-			
-			.valuestyle {
-				width: 70%;
-			}
-			
 			#okBtn {
+				margin-top: 20px;
 				border: none;
 				padding-top: 10px;
 				padding-bottom: 10px;
 				font-size: 17px;
 			}
-			
 		</style>
 	</head>
 
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
-			<h1 id="title" class="mui-title">基本信息</h1>
+			<h1 id="title" class="mui-title">上传图片</h1>
+			<a class="mui-btn mui-btn-link mui-pull-right" id="addImage">添加</a>
 		</header>
 
 		<div class="mui-content rootPadding">
-			<ul class="mui-table-view" id="ul">
+			<div id="imgDiv">
 
-			</ul>
+			</div>
+			<p style="margin:10px auto 10px 10px;">注：所有附件上传成功后不可更改、删除</p>
 
-			<div style="padding: 10px; margin-top: 20px;">
+			<div style="padding: 10px; margin-top: 10px;">
+
 				<button id='okBtn' class="mui-btn mui-btn-block mui-btn-primary oabtn">开始上传</button>
 			</div>
 
 		</div>
 
 		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript" src="../js/view.js" ></script>
-		
+		<script type="text/javascript" src="../js/view.js"></script>
+
 		<script type="text/javascript">
+			var imgDiv = document.getElementById('imgDiv');
+
 			mui.init();
-			
-			window.onload = function(){
+
+			window.onload = function() {
 				refreshView();
 			};
-			
+
 			function refreshView() {
-				var ul = document.getElementById('ul');
-				ul.appendChild(createUploadImage('1','机房与周围环境的照片'));
-				ul.appendChild(createUploadImage('2', '机房入口'));
-				ul.appendChild(createUploadImage('3', '机房门牌'));
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					console.log(self.imageList);
+					for(var i = 0; i < self.imageList.length; i++) {
+						imgDiv.appendChild(createUploadImage(i + '', self.imageList[i]));
+					}
+				});
 			}
-			
+
 			document.getElementById('okBtn').addEventListener('tap', function() {
 				mui.alert('上传成功', '提示', function() {
 					mui.back();
 				});
 			}, false);
-			
+
+			document.getElementById('addImage').addEventListener('tap', function() {
+				imgDiv.appendChild(createUploadImage('1', ''));
+			}, false);
 		</script>
 
 	</body>

@@ -49,3 +49,22 @@ body {
 .backbtn {
 	color: #4A87B6;
 }
+
+/*--------------------------------------------------------*/
+
+.ulstyle {
+	margin-top: 15px;
+}
+
+.imgdivstyle {
+	text-align: center;
+}
+
+.imgstyle {
+	height: 60px;
+}
+
+.valuestyle {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}

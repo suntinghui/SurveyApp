@@ -14,6 +14,7 @@
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
 			<h1 id="title" class="mui-title">配电信息</h1>
+			<a id='uploadImage' class="mui-btn mui-btn-link mui-pull-right">照片</a>
 		</header>
 
 		<div class="mui-content rootPadding">
@@ -93,6 +94,22 @@
 			mui.init({
 				swipeBack: true
 			});
+			
+			document.getElementById('uploadImage').addEventListener('tap', function() {
+				var imageList = new Array(['电池全景图'], ['电池型号标签'], ['交流配电柜内部全景'],['交流配电柜上部断电器区域局部'],['交流配电柜下部空开区域局部'],['交流配电柜下部接地排和零线排局部']);
+
+				mui.openWindow({
+					url: 'uploadImage.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						imageList: imageList
+					}
+				});
+			}, false);
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.alert('保存成功', '提示', function() {

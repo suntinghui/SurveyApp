@@ -23,24 +23,29 @@ function closeToMain() {
 }
 
 function createUploadImage(id, placeholder) {
+	var ul = document.createElement('ul');
+	ul.className = 'mui-table-view mui-card ulstyle';
+
 	var li = document.createElement('li');
-	li.className = 'mui-table-view-cell listyle';
+	li.className = 'mui-table-view-cell';
 
 	var div1 = document.createElement('div');
-	div1.className = 'item-name';
-	div1.innerHTML = '<img src="../img/placeholder.png" style="height: 45px; " />';
+	div1.className = 'imgdivstyle';
+	div1.innerHTML = '<img src="../img/placeholder.png" class="imgstyle" />';
 	li.appendChild(div1);
 
 	var div2 = document.createElement('div');
-	div2.className = 'item-value valuestyle';
-	div2.innerHTML = '<input id="ip" type="text" class="mui-input-clear" placeholder="" value="' + placeholder + '">';
+	div2.className = 'valuestyle';
+	div2.innerHTML = '<input id="ip" type="text" class="mui-input-clear" placeholder="请输入图片标题" value="' + placeholder + '">';
 	li.appendChild(div2);
 
 	div1.addEventListener('tap', function() {
 		galleryImgsSelected(div1);
 	}, false);
+	
+	ul.appendChild(li);
 
-	return li;
+	return ul;
 }
 
 function galleryImgsSelected(div) {
@@ -51,7 +56,7 @@ function galleryImgsSelected(div) {
 
 	}, function(e) {
 		console.log('取消选择图片');
-		
+
 	}, {
 		filter: 'image',
 		multiple: false

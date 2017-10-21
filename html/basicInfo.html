@@ -14,11 +14,10 @@
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
 			<h1 id="title" class="mui-title">基本信息</h1>
-			<a id='uploadImage' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">照片</a>
+			<a id='uploadImage' class="mui-btn mui-btn-link mui-pull-right">照片</a>
 		</header>
 
 		<div class="mui-content rootPadding">
-
 			<div class="desc">基本信息</div>
 			<div class="mui-card mui-table-view">
 				<div class="item-div mui-table-view-cell">
@@ -115,14 +114,19 @@
 			mui.init({
 				swipeBack: true
 			});
-			
-			document.getElementById('title').addEventListener('tap', function(){
+
+			document.getElementById('uploadImage').addEventListener('tap', function() {
+				var imageList = new Array(['机房与周围环境的照片'], ['机房入口'], ['机房门牌']);
+
 				mui.openWindow({
-					url: 'basicInfoImage.html',
-					id: "basicInfoImage.html",
+					url: 'uploadImage.html',
+					id: Math.random() + '',
 					preload: true,
 					show: {
 						aniShow: 'pop-in'
+					},
+					extras: {
+						imageList: imageList
 					}
 				});
 			}, false);
