@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		<link rel="stylesheet" href="../css/survey.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.dtpicker.css" />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">添加机列</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-card mui-table-view">
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机列名称</div>
+					<div class="item-value mui-input-row">
+						<input id="name" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机列编号</div>
+					<div class="item-value mui-input-row">
+						<input id="mac_col_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">列号</div>
+					<div class="item-value mui-input-row">
+						<input id="column_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">相邻</div>
+					<div class="item-value mui-input-row">
+						<input id="adjacent" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">冷通道距离</div>
+					<div class="item-value mui-input-row">
+						<input id="coolPass" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">热通道距离</div>
+					<div class="item-value">
+						<input id="hotPass" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+			</div>
+
+			<div style="margin: 20px 10px;">
+				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/city.data-3.js"></script>
+		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+					if(e.index == 1) {
+						requestSave();
+					}
+				})
+			}, false);
+
+			function requestSave() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}
+		</script>
+
+	</body>
+
+</html>

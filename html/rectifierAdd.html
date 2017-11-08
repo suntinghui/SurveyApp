@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		<link rel="stylesheet" href="../css/survey.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.dtpicker.css" />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">添加整流器</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-card mui-table-view">
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">整流器编号</div>
+					<div class="item-value mui-input-row">
+						<input id="rectifier_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">容量</div>
+					<div class="item-value mui-input-row">
+						<input id="capacity" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">所属配电柜</div>
+					<div class="item-value">
+						<button id="distributors_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">启用日期</div>
+					<div class="item-value">
+						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+					</div>
+				</div>
+
+			</div>
+
+			<div style="margin: 20px 10px;">
+				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/city.data-3.js"></script>
+		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+					if(e.index == 1) {
+						requestSave();
+					}
+				})
+			}, false);
+
+			function requestSave() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}
+		</script>
+
+		<script>
+			var userPicker1 = new mui.PopPicker();
+			userPicker1.setData([{
+				value: '1',
+				text: '配电柜一'
+			}, {
+				value: '2',
+				text: '配电柜二'
+			}, {
+				value: '3',
+				text: '配电柜三'
+			}]);
+
+			var distributors_code = document.getElementById('distributors_code');
+			distributors_code.addEventListener('tap', function(event) {
+				userPicker1.show(function(items) {
+					distributors_code.innerHTML = items[0].text;
+				});
+			}, false);
+		</script>
+
+		<script>
+			var start_time = document.getElementById('start_time');
+			start_time.addEventListener('tap', function() {
+				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
+				picker.show(function(selectItems) {
+					start_time.innerHTML = selectItems.text;
+					//selectItems.value;
+					picker.dispose();
+				});
+			}, false);
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>主设备列表</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		<link rel="stylesheet" href="../css/survey.css" />
+
+		<style>
+			.name {
+				margin: 8px auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">主设备列表</h1>
+			<a class="mui-icon mui-icon-plus mui-pull-right" id="add"></a>
+		</header>
+
+		<div class="mui-content">
+			<ul class="mui-table-view" id="list">
+			</ul>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			window.onload = function() {
+				refresh();
+			};
+
+			document.getElementById('add').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'facilityAdd.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						id: ''
+					}
+				});
+			}, false);
+
+			function refresh() {
+				var list = document.getElementById('list');
+				// 首先清空下面的所有结点
+				while(list.hasChildNodes()) {
+					list.removeChild(list.firstChild);
+				}
+
+				// 开始添加新的节点
+				var fragment = document.createDocumentFragment();
+				var li;
+				for(var i = 0; i < 6; i++) {
+					li = document.createElement('li');
+					li.className = 'mui-table-view-cell';
+
+					var a = document.createElement('a');
+					a.className = 'mui-navigate-right';
+
+					a.appendChild(createInfoItem('设备编号', '设备编号'));
+					a.appendChild(createInfoItem('所属机架', '所属机架'));
+					a.appendChild(createInfoItem('规格', '规格'));
+
+					li.appendChild(a);
+					fragment.appendChild(li);
+				}
+				list.appendChild(fragment);
+			}
+
+			mui('.mui-table-view').on('tap', 'li', function(e) {
+				mui.openWindow({
+					url: 'facilityInfo.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						id: ''
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

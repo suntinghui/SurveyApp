@@ -8,6 +8,9 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../css/parse.css" />
 		<link rel="stylesheet" href="../css/survey.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.dtpicker.css" />
 	</head>
 
 	<body>
@@ -17,123 +20,200 @@
 			<a id='uploadImage' class="mui-btn mui-btn-link mui-pull-right">照片</a>
 		</header>
 
-		<div class="mui-content rootPadding">
-
-			<div class="desc">基本信息</div>
+		<div class="mui-content">
 			<div class="mui-card mui-table-view">
+
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">所属楼层</div>
+					<div class="item-name">机房名称</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入所属楼层">
+						<input id="name" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">总楼层数</div>
+					<div class="item-name">所属地理空间</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入总楼层数">
+						<input id="geos_id" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">门窗朝向</div>
+					<div class="item-name">所属客户</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入门窗朝向">
+						<input id="customer_id" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">冷墙数量</div>
+					<div class="item-name">机房大楼</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入冷墙数量">
+						<input id="big_type" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">冷墙朝向</div>
+					<div class="item-name">类型</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入冷墙朝向">
+						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
-			</div>
-
-			<div class="desc">面积信息</div>
-			<div class="mui-card mui-table-view">
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">机房面积</div>
-					<div class="item-value mui-input-row" style="width: 57%;">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入机房面积">
-					</div>
-					平米
-				</div>
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">机房长度</div>
-					<div class="item-value mui-input-row" style="width: 57%;">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入机房长度">
-					</div>
-					米
-				</div>
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">机房宽度</div>
-					<div class="item-value mui-input-row" style="width: 57%;">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入机房宽度">
-					</div>
-					米
-				</div>
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">机房净高</div>
-					<div class="item-value mui-input-row" style="width: 57%;">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入机房净高">
-					</div>
-					米
-				</div>
-
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">说明</div>
+					<div class="item-name">总行数</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入说明">
+						<input id="rows" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
-			</div>
-
-			<div class="desc">走线架距地板高度</div>
-			<div class="mui-card mui-table-view">
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">上走线架</div>
-					<div class="item-value mui-input-row" style="width: 57%;">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入上走线架高度">
+					<div class="item-name">总列数</div>
+					<div class="item-value mui-input-row">
+						<input id="cols" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
-					毫米
-				</div>
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">下走线架</div>
-					<div class="item-value mui-input-row" style="width: 57%;">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入下走线架高度">
-					</div>
-					毫米
 				</div>
 
-			</div>
-
-			<div class="desc">建筑结构</div>
-			<div class="mui-card mui-table-view">
 				<div class="item-div mui-table-view-cell">
+					<div class="item-name">冷通道总数</div>
+					<div class="item-value mui-input-row">
+						<input id="cools" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">热通道总数</div>
+					<div class="item-value mui-input-row">
+						<input id="hots" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机房房间号</div>
+					<div class="item-value mui-input-row">
+						<input id="room_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">长度</div>
+					<div class="item-value mui-input-row">
+						<input id="length" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">宽度</div>
+					<div class="item-value mui-input-row">
+						<input id="width" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">高度</div>
+					<div class="item-value mui-input-row">
+						<input id="height" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">面积</div>
+					<div class="item-value mui-input-row">
+						<input id="area" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">架空地板尺寸</div>
+					<div class="item-value mui-input-row">
+						<input id="floorheight" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机列布放</div>
+					<div class="item-value mui-input-row">
+						<input id="rackPlot" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">启用日期</div>
+					<div class="item-value">
+						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">外墙朝向</div>
+					<div class="item-value mui-input-row">
+						<input id="exterior_walls_orientations" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">外墙数量</div>
+					<div class="item-value mui-input-row">
+						<input id="exterior_walls_count" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">经度</div>
+					<div class="item-value mui-input-row">
+						<input id="longitude" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">纬度</div>
+					<div class="item-value mui-input-row">
+						<input id="latitude" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="mui-table-view-cell">
+					<p id="getLocation" style="float: left; color: dodgerblue;">手机定位</p>
+					<p id="showLocation" style="float: right; color: dodgerblue;">核验输入的位置</p>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">所属区划</div>
+					<div class="item-value">
+						<button id="showCityPicker3" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div class="item-div">
 					<div class="item-name">建筑结构</div>
-					<ul class="mui-table-view item-value mui-input-row" style="padding-left: 0px;">
-						<li class="mui-table-view-cell mui-radio mui-left">
-							<input name="radio" type="radio">框架结构
-						</li>
-						<li class="mui-table-view-cell mui-radio mui-left">
-							<input name="radio" type="radio">混凝土浇筑
-						</li>
-					</ul>
+					<div class="item-value">
+						<button id="building_structure" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
 				</div>
+
+				<div class="item-div">
+					<div class="item-name">走线架方式</div>
+					<div class="item-value">
+						<button id="chamfer" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div class="item-div">
+					<div class="item-name">地板类型</div>
+					<div class="item-value">
+						<button id="floor_type" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">说明</div>
+					<div class="item-name">地板规格</div>
 					<div class="item-value mui-input-row">
-						<input type="text" class="mui-input-speech mui-input-clear" placeholder="请输入说明">
+						<input id="floor_format" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">静压箱高度</div>
+					<div class="item-value mui-input-row">
+						<input id="plenum_height" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
@@ -146,11 +226,65 @@
 		</div>
 
 		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/city.data-3.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=x1C7K385dRjOuugisRHZuAkyoU9Cnm06"></script>
+
 		<script type="text/javascript">
-			mui.init({
-				swipeBack: true
-			});
-			
+			mui.init();
+
+			document.getElementById('getLocation').addEventListener('tap', function() {
+				mui.toast('正在进行定位，请稍候...')
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r) {
+					if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+						var mk = new BMap.Marker(r.point);
+						document.getElementById('longitude').value = r.point.lng;
+						document.getElementById('latitude').value = r.point.lat;
+
+					} else {
+						mui.toast('手机定位失败:' + this.getStatus());
+					}
+				}, {
+					enableHighAccuracy: true
+				})
+			}, false);
+
+			document.getElementById('showLocation').addEventListener('tap', function() {
+				var longitude = document.getElementById('longitude').value;
+				var latitude = document.getElementById('latitude').value;
+
+				mui.openWindow({
+					url: 'showLocation.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						longitude: longitude,
+						latitude: latitude
+					}
+				});
+			}, false);
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+					if(e.index == 1) {
+						requestSave();
+					}
+				})
+			}, false);
+
+			function requestSave() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}
+
 			document.getElementById('uploadImage').addEventListener('tap', function() {
 				var imageList = new Array(['机房全景图']);
 
@@ -166,13 +300,107 @@
 					}
 				});
 			}, false);
+		</script>
 
-			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				mui.alert('保存成功', '提示', function() {
-					mui.back();
+		<script>
+			var cityPicker3 = new mui.PopPicker({
+				layer: 3
+			});
+			cityPicker3.setData(cityData3);
+
+			var showCityPickerButton = document.getElementById('showCityPicker3');
+			showCityPickerButton.addEventListener('tap', function(event) {
+				cityPicker3.show(function(items) {
+					showCityPickerButton.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+					console.log(items[2]['value']);
+					//返回 false 可以阻止选择框的关闭
+					//return false;
+				});
+			}, false);
+
+			var _getParam = function(obj, param) {
+				return obj[param] || '';
+			};
+		</script>
+
+		<script>
+			var userPicker1 = new mui.PopPicker();
+			userPicker1.setData([{
+				value: '1',
+				text: '钢筋混凝土'
+			}, {
+				value: '2',
+				text: '框架结构'
+			}, {
+				value: '3',
+				text: '其他'
+			}]);
+			var building_structure = document.getElementById('building_structure');
+			building_structure.addEventListener('tap', function(event) {
+				userPicker1.show(function(items) {
+					building_structure.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
+
+		<script>
+			var userPicker2 = new mui.PopPicker();
+			userPicker2.setData([{
+				value: '1',
+				text: '上走线架'
+			}, {
+				value: '2',
+				text: '下走线架'
+			}, {
+				value: '3',
+				text: '双走线架'
+			}, {
+				value: '4',
+				text: '地板下走线'
+			}, {
+				value: '5',
+				text: '其他'
+			}]);
+			var chamfer = document.getElementById('chamfer');
+			chamfer.addEventListener('tap', function(event) {
+				userPicker2.show(function(items) {
+					chamfer.innerHTML = items[0].text;
+				});
+			}, false);
+		</script>
+
+		<script>
+			var userPicker3 = new mui.PopPicker();
+			userPicker3.setData([{
+				value: '1',
+				text: '地砖'
+			}, {
+				value: '2',
+				text: '架空地板'
+			}, {
+				value: '3',
+				text: '其他'
+			}]);
+			var floor_type = document.getElementById('floor_type');
+			floor_type.addEventListener('tap', function(event) {
+				userPicker3.show(function(items) {
+					floor_type.innerHTML = items[0].text;
+				});
+			}, false);
+		</script>
+
+		<script>
+			var start_time = document.getElementById('start_time');
+			start_time.addEventListener('tap', function() {
+				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
+				picker.show(function(selectItems) {
+					start_time.innerHTML = selectItems.text;
+					//selectItems.value;
+					picker.dispose();
+				});
+			}, false);
+		</script>
+
 	</body>
 
 </html>

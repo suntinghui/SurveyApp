@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		<link rel="stylesheet" href="../css/survey.css" />
+
+		<style>
+			.name {
+				margin: 8px auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">选择机架</h1>
+			<a id='done' class="mui-btn mui-btn-link mui-pull-right">完成</a>
+		</header>
+
+		<div class="mui-content">
+			<form class="mui-input-group" id="form">
+			</form>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			window.onload = function() {
+				refresh();
+			};
+
+			document.getElementById('done').addEventListener('tap', function() {
+				mui.back();
+			}, false);
+
+			function refresh() {
+				var form = document.getElementById('form');
+				// 首先清空下面的所有结点
+				while(form.hasChildNodes()) {
+					form.removeChild(form.firstChild);
+				}
+
+				form.appendChild(createCheckbox('机架一', '1', false, false));
+				form.appendChild(createCheckbox('机架一', '1', true, false));
+				form.appendChild(createCheckbox('机架一', '1', true, true));
+				form.appendChild(createCheckbox('机架一', '1', true, false));
+				form.appendChild(createCheckbox('机架一', '1', false, true));
+				form.appendChild(createCheckbox('机架一', '1', true, false));
+			}
+
+			/*
+			mui('.mui-input-group').on('change', 'input', function() {
+				var value = this.checked ? "true" : "false";
+				this.previousElementSibling.innerText = "checked：" + value;
+			});
+			*/
+		</script>
+	</body>
+
+</html>

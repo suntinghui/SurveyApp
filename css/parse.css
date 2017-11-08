@@ -28,16 +28,17 @@ input[type="text"] {
 }
 
 .item-name {
-	width: 30%;
+	width: 28%;
 	color: #666666;
 	font-size: 15px;
-	text-align: center;
+	text-align: right;
 }
 
 .item-value {
 	width: 65%;
 	color: #333333;
-	margin-right: 20px;
+	margin-right: 10px;
+	margin-left: 10px;
 	font-size: 15px;
 }
 
@@ -116,4 +117,10 @@ input[type="text"] {
 	padding-bottom: 10px;
 	font-size: 17px;
 	background: #0084C8;
+}
+
+.mybtn2 {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 15px;
 }

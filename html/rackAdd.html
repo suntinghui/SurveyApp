@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/parse.css" />
+		<link rel="stylesheet" href="../css/survey.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.dtpicker.css" />
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav navbar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
+			<h1 id="title" class="mui-title">添加机架</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-card mui-table-view">
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机架名称</div>
+					<div class="item-value mui-input-row">
+						<input id="name" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机架编号</div>
+					<div class="item-value mui-input-row">
+						<input id="rack_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">类型</div>
+					<div class="item-value mui-input-row">
+						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div">
+					<div class="item-name">所属机列</div>
+					<div class="item-value">
+						<button id="mac_col" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div id="mac_col_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+					<p style="float: right; color: dodgerblue;">没有找到机列？</p>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">行号</div>
+					<div class="item-value mui-input-row">
+						<input id="rows_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">相邻</div>
+					<div class="item-value mui-input-row">
+						<input id="adjacent" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">冷通道编号</div>
+					<div class="item-value">
+						<input id="col_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">热通道编号</div>
+					<div class="item-value mui-input-row">
+						<input id="hot_code" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机架进风方式</div>
+					<div class="item-value mui-input-row">
+						<input id="inAirSort" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机架进风方式</div>
+					<div class="item-value mui-input-row">
+						<input id="outAirSort" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">机架公用通道</div>
+					<div class="item-value">
+						<input id="publicPass" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div ">
+					<div class="item-name">所属制冷设备</div>
+					<div class="item-value">
+						<button id="air_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div id="air_code_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+					<p style="float: right; color: dodgerblue;">没有找到制冷设备？</p>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">几U机架</div>
+					<div class="item-value">
+						<input id="rack_u_count" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div ">
+					<div class="item-name">所属列头柜</div>
+					<div class="item-value">
+						<button id="colheadcabinet_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div id="colheadcabinet_code_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+					<p style="float: right; color: dodgerblue;">没有找到列头柜？</p>
+				</div>
+
+			</div>
+
+			<div style="margin: 20px 10px;">
+				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
+			</div>
+
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/city.data-3.js"></script>
+		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+					if(e.index == 1) {
+						requestSave();
+					}
+				})
+			}, false);
+
+			function requestSave() {
+				mui.alert('保存成功', '提示', function() {
+					mui.back();
+				});
+			}
+		</script>
+
+		<script>
+			document.getElementById('air_code_manage').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'airconditioningList.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						id: ''
+					}
+				});
+			}, false);
+
+			document.getElementById('colheadcabinet_code_manage').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'colheadcabinetList.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						id: ''
+					}
+				});
+			}, false);
+
+			document.getElementById('mac_col_manage').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'macColList.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					},
+					extras: {
+						id: ''
+					}
+				});
+			}, false);
+		</script>
+
+		<script>
+			var userPicker1 = new mui.PopPicker();
+			userPicker1.setData([{
+				value: '1',
+				text: '制冷设备一'
+			}, {
+				value: '2',
+				text: '制冷设备二'
+			}, {
+				value: '3',
+				text: '制冷设备三'
+			}]);
+
+			var air_code = document.getElementById('air_code');
+			air_code.addEventListener('tap', function(event) {
+				userPicker1.show(function(items) {
+					air_code.innerHTML = items[0].text;
+				});
+			}, false);
+		</script>
+
+		<script>
+			var userPicker2 = new mui.PopPicker();
+			userPicker2.setData([{
+				value: '1',
+				text: '列头柜一'
+			}, {
+				value: '2',
+				text: '列头柜二'
+			}, {
+				value: '3',
+				text: '列头柜三'
+			}]);
+
+			var colheadcabinet_code = document.getElementById('colheadcabinet_code');
+			colheadcabinet_code.addEventListener('tap', function(event) {
+				userPicker2.show(function(items) {
+					colheadcabinet_code.innerHTML = items[0].text;
+				});
+			}, false);
+		</script>
+
+		<script>
+			var userPicker3 = new mui.PopPicker();
+			userPicker3.setData([{
+				value: '1',
+				text: '机列一'
+			}, {
+				value: '2',
+				text: '机列二'
+			}, {
+				value: '3',
+				text: '机列三'
+			}]);
+
+			var mac_col = document.getElementById('mac_col');
+			mac_col.addEventListener('tap', function(event) {
+				userPicker3.show(function(items) {
+					mac_col.innerHTML = items[0].text;
+				});
+			}, false);
+		</script>
+
+	</body>
+
+</html>

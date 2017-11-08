@@ -1,66 +1,66 @@
 {
-	"html/main.html": {
-		"resources": [
-			"img/icon_3.png",
-			"img/icon_2.png",
-			"img/icon_4.png",
-			"js/badge.js",
-			"img/icon_1.png",
-			"img/icon_5.png",
-			"img/icon_6.png",
-			"css/mui.min.css"
-		],
-		"refer": [
-			"html/basicInfo.html",
-			"html/computerRoomInfo.html",
-			"html/deviceInfo.html",
-			"html/airConditionInfo.html",
-			"html/setting.html"
-		]
-	},
-	"html/login.html": {
-		"resources": [
-			"js/util.js",
-			"js/constants.js",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"img/home_bg.png",
-			"css/oa.css"
-		],
-		"refer": [
-			"html/main.html"
-		]
-	},
-	"html/basicInfo.html": {
-		"resources": [
-			"css/parse.css",
-			"css/mui.min.css"
-		]
-	},
-	"html/computerRoomInfo.html": {
-		"resources": [
-			"css/parse.css",
-			"css/mui.min.css"
-		]
-	},
-	"html/airConditionInfo.html": {
-		"resources": [
-			"css/mui.min.css"
-		]
-	},
-	"html/deviceInfo.html": {
-		"resources": [
-			"css/mui.min.css"
-		]
-	},
-	"html/setting.html": {
-		"resources": [
-			"js/mui.picker.js",
-			"js/mui.poppicker.js",
-			"css/mui.min.css",
-			"css/mui.poppicker.css",
-			"css/mui.picker.css"
-		]
-	}
+  "html/main.html": {
+    "resources": [
+      "img/icon_3.png",
+      "img/icon_2.png",
+      "img/icon_4.png",
+      "js/badge.js",
+      "img/icon_1.png",
+      "img/icon_5.png",
+      "img/icon_6.png",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "html/basicInfo.html",
+      "html/computerRoomInfo.html",
+      "html/deviceInfo.html",
+      "html/airConditionInfo.html",
+      "html/setting.html"
+    ]
+  },
+  "html/login.html": {
+    "resources": [
+      "js/util.js",
+      "js/constants.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "img/home_bg.png",
+      "css/oa.css"
+    ],
+    "refer": [
+      "html/main.html"
+    ]
+  },
+  "html/basicInfo.html": {
+    "resources": [
+      "css/parse.css",
+      "css/mui.min.css"
+    ]
+  },
+  "html/computerRoomInfo.html": {
+    "resources": [
+      "css/parse.css",
+      "css/mui.min.css"
+    ]
+  },
+  "html/airConditionInfo.html": {
+    "resources": [
+      "css/mui.min.css"
+    ]
+  },
+  "html/deviceInfo.html": {
+    "resources": [
+      "css/mui.min.css"
+    ]
+  },
+  "html/setting.html": {
+    "resources": [
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "css/mui.min.css",
+      "css/mui.poppicker.css",
+      "css/mui.picker.css"
+    ]
+  }
 }

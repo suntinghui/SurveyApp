@@ -16,101 +16,79 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
-			<h1 id="title" class="mui-title">电池组信息</h1>
-			<a id='deleteBox' class="mui-btn mui-btn-link mui-pull-right" style="color: red;">删除</a>
+			<h1 id="title" class="mui-title">添加配电柜</h1>
 		</header>
 
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">电池组编号</div>
+					<div class="item-name">配电柜名称</div>
 					<div class="item-value mui-input-row">
-						<input id="battery_code" type="text" class="mui-input-speech mui-input-clear param">
+						<input id="name" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">额定容量</div>
+					<div class="item-name">编号</div>
 					<div class="item-value mui-input-row">
-						<input id="capacity" type="text" class="mui-input-speech mui-input-clear param">
+						<input id="dis_code" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">型号</div>
-					<div class="item-value mui-input-row">
-						<input id="model" type="text" class="mui-input-speech mui-input-clear param">
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">电池组特性</div>
-					<div class="item-value mui-input-row">
-						<input id="feature" type="text" class="mui-input-speech mui-input-clear param">
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">应用范围</div>
-					<div class="item-value mui-input-row">
-						<input id="range_of_use" type="text" class="mui-input-speech mui-input-clear param">
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">使用频率</div>
-					<div class="item-value mui-input-row">
-						<input id="rate" type="text" class="mui-input-speech mui-input-clear param">
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">尺寸</div>
-					<div class="item-value mui-input-row">
-						<input id="size" type="text" class="mui-input-speech mui-input-clear param">
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">重量</div>
-					<div class="item-value mui-input-row">
-						<input id="weight" type="text" class="mui-input-speech mui-input-clear param">
-					</div>
-				</div>
-				
+
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">厂家</div>
 					<div class="item-value mui-input-row">
 						<input id="company" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
-				
+
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">所属UPS</div>
-					<div class="item-value">
-						<button id="ups_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">所属整流器</div>
-					<div class="item-value">
-						<button id="rectifier_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
-					</div>
-				</div>
-				
-				<div class="item-div mui-table-view-cell">
-					<div class="item-name">额定电压</div>
+					<div class="item-name">型号</div>
 					<div class="item-value mui-input-row">
-						<input id="voltage" type="text" class="mui-input-speech mui-input-clear param">
+						<input id="model" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
-				
+
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">工作环境温度</div>
+					<div class="item-name">尺寸规格</div>
 					<div class="item-value mui-input-row">
-						<input id="temp" type="text" class="mui-input-speech mui-input-clear param">
+						<input id="size" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">功能</div>
+					<div class="item-value">
+						<button id="gongneng" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">电流总限额</div>
+					<div class="item-value mui-input-row">
+						<input id="current_quota" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">已使用电流数</div>
+					<div class="item-value mui-input-row">
+						<input id="already_use_current_count" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">未使用电流数</div>
+					<div class="item-value mui-input-row">
+						<input id="not_used_current_count" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">交直流</div>
+					<div class="item-value">
+						<button id="acdc" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
 
@@ -118,6 +96,25 @@
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
 						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+					</div>
+				</div>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">空开总数量</div>
+					<div class="item-value mui-input-row">
+						<input id="aocn_count" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">空开已使用数量</div>
+					<div class="item-value mui-input-row">
+						<input id="already_use_aocn_count" type="text" class="mui-input-speech mui-input-clear param">
+					</div>
+				</div>
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">空开未使用数量</div>
+					<div class="item-value mui-input-row">
+						<input id="not_use_aocn_count" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
@@ -134,35 +131,21 @@
 		<script src="../js/mui.picker.js"></script>
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
-		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/mui.dtpicker.js" ></script>
 
 		<script type="text/javascript">
 			mui.init();
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
+				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
-						requestUpdate();
+						requestSave();
 					}
 				})
 			}, false);
 
-			function requestUpdate() {
-				mui.alert('修改成功', '提示', function() {
-					mui.back();
-				});
-			}
-
-			document.getElementById('deleteBox').addEventListener('tap', function() {
-				mui.confirm('删除后不可恢复，请确认', '确认删除', ['取消', '删除'], function(e) {
-					if(e.index == 1) {
-						requestDelete();
-					}
-				})
-			}, false);
-
-			function requestDelete() {
-				mui.alert('删除成功', '提示', function() {
+			function requestSave() {
+				mui.alert('保存成功', '提示', function() {
 					mui.back();
 				});
 			}
@@ -171,41 +154,36 @@
 		<script>
 			var userPicker1 = new mui.PopPicker();
 			userPicker1.setData([{
-				value: '1',
-				text: 'UPS一'
+				value: 'ac',
+				text: '交流'
 			}, {
-				value: '2',
-				text: 'UPS二'
-			}, {
-				value: '3',
-				text: 'UPS三'
+				value: 'dc',
+				text: '直流'
 			}]);
-
-			var ups_code = document.getElementById('ups_code');
-			ups_code.addEventListener('tap', function(event) {
+			var acdc = document.getElementById('acdc');
+			acdc.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					ups_code.innerHTML = items[0].text;
+					acdc.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
-		
+
 		<script>
 			var userPicker2 = new mui.PopPicker();
 			userPicker2.setData([{
 				value: '1',
-				text: '整流器一'
+				text: '空调'
 			}, {
 				value: '2',
-				text: '整流器二'
+				text: '主设备'
 			}, {
 				value: '3',
-				text: '整流器三'
+				text: '其他'
 			}]);
-
-			var rectifier_code = document.getElementById('rectifier_code');
-			rectifier_code.addEventListener('tap', function(event) {
+			var gongneng = document.getElementById('gongneng');
+			gongneng.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					rectifier_code.innerHTML = items[0].text;
+					gongneng.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>

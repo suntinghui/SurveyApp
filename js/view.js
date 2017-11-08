@@ -2,7 +2,7 @@
 function createInfoItem(name, value) {
 	var div = document.createElement('div');
 	div.className = "item-div";
-	div.innerHTML = '<div class="item-name">' + name + '</div><div class="item-value">' + value + '</div>';
+	div.innerHTML = '<div class="item-name">' + name + '：</div><div class="item-value">' + value + '</div>';
 	return div;
 }
 
@@ -11,6 +11,45 @@ function createDownloadItem(name, value, url, type, htmlContent) {
 	div.addEventListener('tap', function() {
 		openContent(url, type, htmlContent);
 	}, false);
+}
+
+function createNormalInput(name, id, placeholder, isParam) {
+	var divPar = document.createElement('div');
+	divPar.className = 'item-div mui-table-view-cell';
+
+	var divKey = document.createElement('div');
+	divKey.className = 'item-name';
+	divKey.innerHTML = name;
+	divPar.appendChild(divKey);
+
+	var divValue = document.createElement('div');
+	divValue.className = 'item-value mui-input-row';
+
+	var i = document.createElement('input');
+	i.type = 'text';
+	i.id = id;
+	i.className = 'mui-input-speech mui-input-clear param';
+	i.placeholder = placeholder;
+	divValue.appendChild(i);
+
+	divPar.appendChild(divValue);
+
+	return divPar;
+}
+
+function createCheckbox(text, value, checked, disabled) {
+
+	var div = document.createElement('div');
+	div.className = 'mui-input-row mui-checkbox';
+
+	var inner = '<label>' + text + '</label><input name="checkbox1" type="checkbox" value="' + value + '" ';
+	inner += (checked == true ? 'checked' : '');
+	inner += (disabled == true ? ' disabled="disabled">' : '>');
+	div.innerHTML = inner;
+
+	console.log(inner);
+
+	return div;
 }
 
 // 关闭页面一直到九宫格界面
@@ -42,7 +81,7 @@ function createUploadImage(id, placeholder) {
 	div1.addEventListener('tap', function() {
 		galleryImgsSelected(div1);
 	}, false);
-	
+
 	ul.appendChild(li);
 
 	return ul;
