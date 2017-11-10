@@ -30,15 +30,90 @@
 
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript" src="../js/view.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
+			var proList;
+
 			window.onload = function() {
-				refresh();
+				//requestList();
+
+				//queryCustomer();
+
+				var resp = {
+					customers: {
+						[{
+							name: '1',
+							child: [{
+								name: '1',
+								child: []
+							}, {
+								name: '1',
+								child: []
+							}]
+						}, {
+							name: '2',
+							child: []
+						}]
+					}
+				};
+
+				console.log(JSON.stringify(resp));
+
+				responseQueryCustomer(resp);
+
 			};
 
-			function refresh() {
+			function requestList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = {
+						userName: window.localStorage.getItem(SaveUserName)
+					};
+
+					var url = getHost() + "list.json";
+					console.log(url);
+					console.log(JSON.stringify(info));
+
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+
+			} // end loginReq
+
+			function responseList(resp) {
+				console.log('项目列表响应：' + JSON.stringify(resp));
+
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+
+				proList = resp.proList;
+
 				var list = document.getElementById('list');
 				// 首先清空下面的所有结点
 				while(list.hasChildNodes()) {
@@ -48,26 +123,31 @@
 				// 开始添加新的节点
 				var fragment = document.createDocumentFragment();
 				var li;
-				for(var i = 0; i < 6; i++) {
+				for(var i = 0; i < proList.length; i++) {
+
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
+					li.id = i + '';
 
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 
-					a.appendChild(createInfoItem('项目名称', '项目勘查'));
-					a.appendChild(createInfoItem('项目描述', '项目描述'));
-					a.appendChild(createInfoItem('项目经理', '经理'));
-					a.appendChild(createInfoItem('项目状态', '扩容'));
+					a.appendChild(createInfoItem('项目名称', proList[i].name));
+					a.appendChild(createInfoItem('项目描述', proList[i].project_bewrite));
+					a.appendChild(createInfoItem('项目经理', proList[i].project_manager));
+					a.appendChild(createInfoItem('项目状态', proList[i].project_state));
 
 					li.appendChild(a);
 					fragment.appendChild(li);
 				}
 				list.appendChild(fragment);
+
 			}
 
 			mui('.mui-table-view').on('tap', 'li', function(e) {
-				var projectTitle = '项目一';
+				var index = this.id - 0;
+				var projectTitle = proList[index].name;
+				var projectId = proList[index].id;
 
 				mui.openWindow({
 					url: 'taskList.html',
@@ -77,10 +157,63 @@
 						aniShow: 'pop-in'
 					},
 					extras: {
-						projectTitle: projectTitle
+						projectTitle: projectTitle,
+						projectId: projectId
 					}
 				});
 			});
+		</script>
+
+		<script>
+			function queryCustomer() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = {};
+
+					var url = getHost() + "queryCustomer.json";
+					console.log(url);
+
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseQueryCustomer(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseQueryCustomer(resp) {
+				var cusList = new Array();;
+				recursionCustomer(cusList, resp.customers);
+
+				for(var i = 0; i < curList.length; i++) {
+					console.log(curList[i]);
+				}
+			}
+
+			function recursionCustomer(cusList, customers) {
+				for(var i = 0; i < customers.child.length; i++) {
+					cusList.push(customers.child[i].name);
+
+					recursionCustomer(cusList, customers.child[i]);
+				}
+			}
 		</script>
 	</body>
 

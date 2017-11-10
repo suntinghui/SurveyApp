@@ -116,8 +116,8 @@
 			};
 
 			loginBtn.addEventListener("tap", function(event) {
-				//loginReq();
-				openMainPage();
+				loginReq();
+				//openMainPage();
 			}, false);
 
 			var checkInput = function() {
@@ -145,13 +145,19 @@
 
 					var pushInfo = plus.push.getClientInfo();
 
-					var argus = "&loginName=" + userNameText.value + "&loginPwd=" + passwordText.value + "&deviceId=" + plus.device.uuid + "&clientid=" + pushInfo.clientid;
-					var url = getHost() + "Identity.ashx?Commond=AppLogin" + argus;
+					var loginInfo = {
+						userName: userNameText.value,
+						password: passwordText.value
+					};
+
+					var url = getHost() + "login.json";
 					console.log(url);
+					console.log(JSON.stringify(loginInfo));
 
 					mui.ajax(url, {
 						dataType: 'json',
-						type: 'get',
+						data: JSON.stringify(loginInfo),
+						type: 'post',
 						timeout: TIMEOUT,
 						headers: {
 							'Content-Type': 'application/json'
@@ -174,54 +180,25 @@
 			function responseLogin(resp) {
 				console.log('登录响应：' + JSON.stringify(resp));
 
-				switch(resp.LoginResult - 0) {
-					case 0:
-						// 保存用户信息
-						window.localStorage.setItem(TokenKey, resp.TokenKey);
-						window.localStorage.setItem(UserName, resp.UserName);
-						window.localStorage.setItem(LoginName, resp.LoginName);
+				if(resp.respCode == '00') {
+					// 保存用户信息
+					window.localStorage.setItem(TokenKey, resp.TokenKey);
+					window.localStorage.setItem(UserName, resp.UserName);
+					window.localStorage.setItem(LoginName, resp.LoginName);
 
-						// 保存登录用户名
-						window.localStorage.setItem(SaveUserName, userNameText.value);
-						window.localStorage.setItem(CheckSavePwd, savepwd.checked);
-						window.localStorage.setItem(CheckAutoLogin, autologin.checked);
-						if(savepwd.checked) {
-							window.localStorage.setItem(SavePwd, passwordText.value);
-						} else {
-							window.localStorage.setItem(SavePwd, '');
-						}
+					// 保存登录用户名
+					window.localStorage.setItem(SaveUserName, userNameText.value);
+					window.localStorage.setItem(CheckSavePwd, savepwd.checked);
+					window.localStorage.setItem(CheckAutoLogin, autologin.checked);
+					if(savepwd.checked) {
+						window.localStorage.setItem(SavePwd, passwordText.value);
+					} else {
+						window.localStorage.setItem(SavePwd, '');
+					}
 
-						openMainPage();
-
-						break;
-
-					case 1:
-						mui.alert("账户不存在", "提示", null);
-						break;
-
-					case 2:
-						mui.alert("密码错误", "提示", null);
-						break;
-
-					case 3:
-						mui.alert("没有移动办公权限", "提示", null);
-						break;
-
-					case 4:
-						mui.alert("无效的移动端设备", "提示", null);
-						break;
-
-					case 5:
-						mui.alert("设备与账号不匹配", "提示", null);
-						break;
-
-					case 6:
-						mui.alert("该设备已被禁用", "提示", null);
-						break;
-
-					default:
-						mui.alert("登录失败，未知异常", "提示", null);
-						break;
+					openMainPage();
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
 				}
 			}
 
