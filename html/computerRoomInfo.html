@@ -138,9 +138,11 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
+				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">外墙朝向</div>
@@ -181,27 +183,31 @@
 						<button id="showCityPicker3" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='prov_id' type="hidden" value='' class='param'></input>
 
 				<div class="item-div">
 					<div class="item-name">建筑结构</div>
 					<div class="item-value">
-						<button id="building_structure" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="building_structureSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='building_structure' type="hidden" value='' class='param'></input>
 
 				<div class="item-div">
 					<div class="item-name">走线架方式</div>
 					<div class="item-value">
-						<button id="chamfer" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="chamferSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='chamfer' type="hidden" value='' class='param'></input>
 
 				<div class="item-div">
 					<div class="item-name">地板类型</div>
 					<div class="item-value">
-						<button id="floor_type" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="floor_typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='floor_type' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">地板规格</div>
@@ -232,6 +238,7 @@
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=x1C7K385dRjOuugisRHZuAkyoU9Cnm06"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
@@ -272,6 +279,9 @@
 			}, false);
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
+				console.log(JSON.stringify(getValue()));
+				return;
+				
 				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
 						requestSave();
@@ -335,10 +345,10 @@
 				value: '3',
 				text: '其他'
 			}]);
-			var building_structure = document.getElementById('building_structure');
-			building_structure.addEventListener('tap', function(event) {
+			var building_structureSel = document.getElementById('building_structureSel');
+			building_structureSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					building_structure.innerHTML = items[0].text;
+					building_structureSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -361,10 +371,10 @@
 				value: '5',
 				text: '其他'
 			}]);
-			var chamfer = document.getElementById('chamfer');
-			chamfer.addEventListener('tap', function(event) {
+			var chamferSel = document.getElementById('chamferSel');
+			chamferSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					chamfer.innerHTML = items[0].text;
+					chamferSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -381,20 +391,20 @@
 				value: '3',
 				text: '其他'
 			}]);
-			var floor_type = document.getElementById('floor_type');
-			floor_type.addEventListener('tap', function(event) {
+			var floor_typeSel = document.getElementById('floor_typeSel');
+			floor_typeSel.addEventListener('tap', function(event) {
 				userPicker3.show(function(items) {
-					floor_type.innerHTML = items[0].text;
+					floor_typeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});
