@@ -60,9 +60,11 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">功能</div>
 					<div class="item-value">
-						<button id="gongneng" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="gongnengSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='gongneng' type="hidden" value='' class='param'></input>
+				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">电流总限额</div>
@@ -88,16 +90,20 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">交直流</div>
 					<div class="item-value">
-						<button id="acdc" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="acdcSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='acdc' type="hidden" value='' class='param'></input>
+				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
+				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空开总数量</div>
@@ -105,6 +111,7 @@
 						<input id="aocn_count" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
+				
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空开已使用数量</div>
 					<div class="item-value mui-input-row">
@@ -160,10 +167,10 @@
 				value: 'dc',
 				text: '直流'
 			}]);
-			var acdc = document.getElementById('acdc');
-			acdc.addEventListener('tap', function(event) {
+			var acdcSel = document.getElementById('acdcSel');
+			acdcSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					acdc.innerHTML = items[0].text;
+					acdcSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -180,20 +187,20 @@
 				value: '3',
 				text: '其他'
 			}]);
-			var gongneng = document.getElementById('gongneng');
-			gongneng.addEventListener('tap', function(event) {
+			var gongnengSel = document.getElementById('gongnengSel');
+			gongnengSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					gongneng.innerHTML = items[0].text;
+					gongnengSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});

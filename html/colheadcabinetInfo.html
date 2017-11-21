@@ -61,9 +61,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">供电类型</div>
 					<div class="item-value">
-						<button id="type" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='type' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">负责区域</div>
@@ -75,16 +76,19 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属配电柜</div>
 					<div class="item-value">
-						<button id="distributors_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="distributors_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='distributors_code' type="hidden" value='' class='param'></input>
+				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
 
 			</div>
 
@@ -146,10 +150,10 @@
 				text: '配电柜三'
 			}]);
 
-			var distributors_code = document.getElementById('distributors_code');
-			distributors_code.addEventListener('tap', function(event) {
+			var distributors_codeSel = document.getElementById('distributors_codeSel');
+			distributors_codeSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					distributors_code.innerHTML = items[0].text;
+					distributors_codeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -163,20 +167,20 @@
 				value: 'dc',
 				text: '直流'
 			}]);
-			var type = document.getElementById('type');
-			type.addEventListener('tap', function(event) {
+			var typeSel = document.getElementById('typeSel');
+			typeSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					type.innerHTML = items[0].text;
+					typeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});

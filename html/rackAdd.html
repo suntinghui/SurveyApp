@@ -46,11 +46,12 @@
 				<div class="item-div">
 					<div class="item-name">所属机列</div>
 					<div class="item-value">
-						<button id="mac_col" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="mac_colSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='mac_col' type="hidden" value='' class='param'></input>
 
-				<div id="mac_col_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+				<div id="mac_colSel_manage" class="mui-table-view-cell" style="margin-top: -10px;">
 					<p style="float: right; color: dodgerblue;">没有找到机列？</p>
 				</div>
 
@@ -106,11 +107,12 @@
 				<div class="item-div ">
 					<div class="item-name">所属制冷设备</div>
 					<div class="item-value">
-						<button id="air_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="air_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='air_code' type="hidden" value='' class='param'></input>
 
-				<div id="air_code_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+				<div id="air_codeSel_manage" class="mui-table-view-cell" style="margin-top: -10px;">
 					<p style="float: right; color: dodgerblue;">没有找到制冷设备？</p>
 				</div>
 
@@ -124,11 +126,12 @@
 				<div class="item-div ">
 					<div class="item-name">所属列头柜</div>
 					<div class="item-value">
-						<button id="colheadcabinet_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="colheadcabinet_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='colheadcabinet_code' type="hidden" value='' class='param'></input>
 
-				<div id="colheadcabinet_code_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+				<div id="colheadcabinet_codeSel_manage" class="mui-table-view-cell" style="margin-top: -10px;">
 					<p style="float: right; color: dodgerblue;">没有找到列头柜？</p>
 				</div>
 
@@ -166,7 +169,7 @@
 		</script>
 
 		<script>
-			document.getElementById('air_code_manage').addEventListener('tap', function() {
+			document.getElementById('air_codeSel_manage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'airconditioningList.html',
 					id: Math.random() + '',
@@ -180,7 +183,7 @@
 				});
 			}, false);
 
-			document.getElementById('colheadcabinet_code_manage').addEventListener('tap', function() {
+			document.getElementById('colheadcabinet_codeSel_manage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'colheadcabinetList.html',
 					id: Math.random() + '',
@@ -194,7 +197,7 @@
 				});
 			}, false);
 
-			document.getElementById('mac_col_manage').addEventListener('tap', function() {
+			document.getElementById('mac_colSel_manage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'macColList.html',
 					id: Math.random() + '',
@@ -222,10 +225,10 @@
 				text: '制冷设备三'
 			}]);
 
-			var air_code = document.getElementById('air_code');
-			air_code.addEventListener('tap', function(event) {
+			var air_codeSel = document.getElementById('air_codeSel');
+			air_codeSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					air_code.innerHTML = items[0].text;
+					air_codeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -243,10 +246,10 @@
 				text: '列头柜三'
 			}]);
 
-			var colheadcabinet_code = document.getElementById('colheadcabinet_code');
-			colheadcabinet_code.addEventListener('tap', function(event) {
+			var colheadcabinet_codeSel = document.getElementById('colheadcabinet_codeSel');
+			colheadcabinet_codeSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					colheadcabinet_code.innerHTML = items[0].text;
+					colheadcabinet_codeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -264,10 +267,10 @@
 				text: '机列三'
 			}]);
 
-			var mac_col = document.getElementById('mac_col');
-			mac_col.addEventListener('tap', function(event) {
+			var mac_colSel = document.getElementById('mac_colSel');
+			mac_colSel.addEventListener('tap', function(event) {
 				userPicker3.show(function(items) {
-					mac_col.innerHTML = items[0].text;
+					mac_colSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>

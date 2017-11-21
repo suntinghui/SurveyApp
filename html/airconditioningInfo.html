@@ -138,9 +138,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">循环风量</div>
@@ -222,9 +223,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属机架</div>
 					<div class="item-value">
-						<button id="rack_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="rack_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='rack_code' type="hidden" value='' class='param'></input>
 
 			</div>
 
@@ -274,8 +276,8 @@
 		</script>
 
 		<script>
-			var rack_code = document.getElementById('rack_code');
-			rack_code.addEventListener('tap', function(event) {
+			var rack_codeSel = document.getElementById('rack_codeSel');
+			rack_codeSel.addEventListener('tap', function(event) {
 				mui.openWindow({
 					url: 'airconditioning_rack.html',
 					id: Math.random() + '',
@@ -292,11 +294,11 @@
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});

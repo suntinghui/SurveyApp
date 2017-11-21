@@ -53,9 +53,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">尺寸</div>
@@ -81,30 +82,34 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属室内机</div>
 					<div class="item-value">
-						<button id="air_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="air_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='air_code' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">是否西晒</div>
 					<div class="item-value">
-						<button id="west_facing" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="west_facingSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='west_facing' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">通风情况</div>
 					<div class="item-value">
-						<button id="air_smooth" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="air_smoothSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='air_smooth' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">是否遮挡</div>
 					<div class="item-value">
-						<button id="shelter" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="shelterSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='shelter' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">环境描述</div>
@@ -161,11 +166,11 @@
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});
@@ -185,10 +190,10 @@
 				text: '室内机三'
 			}]);
 
-			var air_code = document.getElementById('air_code');
-			air_code.addEventListener('tap', function(event) {
+			var air_codeSel = document.getElementById('air_codeSel');
+			air_codeSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					air_code.innerHTML = items[0].text;
+					air_codeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -203,10 +208,10 @@
 				text: '非西晒'
 			}]);
 
-			var west_facing = document.getElementById('west_facing');
-			west_facing.addEventListener('tap', function(event) {
+			var west_facingSel = document.getElementById('west_facingSel');
+			west_facingSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					west_facing.innerHTML = items[0].text;
+					west_facingSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -221,10 +226,10 @@
 				text: '不顺畅'
 			}]);
 
-			var air_smooth = document.getElementById('air_smooth');
-			air_smooth.addEventListener('tap', function(event) {
+			var air_smoothSel = document.getElementById('air_smoothSel');
+			air_smoothSel.addEventListener('tap', function(event) {
 				userPicker3.show(function(items) {
-					air_smooth.innerHTML = items[0].text;
+					air_smoothSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -239,10 +244,10 @@
 				text: '否'
 			}]);
 
-			var shelter = document.getElementById('shelter');
-			shelter.addEventListener('tap', function(event) {
+			var shelterSel = document.getElementById('shelterSel');
+			shelterSel.addEventListener('tap', function(event) {
 				userPicker4.show(function(items) {
-					shelter.innerHTML = items[0].text;
+					shelterSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>

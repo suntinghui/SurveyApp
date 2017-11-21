@@ -89,16 +89,18 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属UPS</div>
 					<div class="item-value">
-						<button id="ups_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="ups_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='ups_code' type="hidden" value='' class='param'></input>
 				
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属整流器</div>
 					<div class="item-value">
-						<button id="rectifier_code" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="rectifier_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='rectifier_code' type="hidden" value='' class='param'></input>
 				
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">额定电压</div>
@@ -117,9 +119,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
 
 			</div>
 
@@ -181,10 +184,10 @@
 				text: 'UPS三'
 			}]);
 
-			var ups_code = document.getElementById('ups_code');
-			ups_code.addEventListener('tap', function(event) {
+			var ups_codeSel = document.getElementById('ups_codeSel');
+			ups_codeSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
-					ups_code.innerHTML = items[0].text;
+					ups_codeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
@@ -202,20 +205,20 @@
 				text: '整流器三'
 			}]);
 
-			var rectifier_code = document.getElementById('rectifier_code');
-			rectifier_code.addEventListener('tap', function(event) {
+			var rectifier_codeSel = document.getElementById('rectifier_codeSel');
+			rectifier_codeSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
-					rectifier_code.innerHTML = items[0].text;
+					rectifier_codeSel.innerHTML = items[0].text;
 				});
 			}, false);
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});

@@ -35,39 +35,80 @@
 		<script type="text/javascript">
 			mui.init();
 
+			var projectTitle;
+			var proId;
+			var taskList;
+
 			window.onload = function() {
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
-					var projectTitle = self.projectTitle;
+					projectTitle = self.projectTitle;
+					proId = self.proId;
 
 					document.getElementById('title').innerHTML = projectTitle;
 
-					refresh();
+					requestList();
 				});
 			};
 
-			function refresh() {
+			function requestList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+					var info = {
+						userName: window.localStorage.getItem(SaveUserName),
+						proId: proId
+					};
+					var url = getHost() + "queryTaskList.json";
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+							responseList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseList(resp) {
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+
+				taskList = resp.taskList;
 				var list = document.getElementById('list');
 				// 首先清空下面的所有结点
 				while(list.hasChildNodes()) {
 					list.removeChild(list.firstChild);
 				}
-
 				// 开始添加新的节点
 				var fragment = document.createDocumentFragment();
 				var li;
-				for(var i = 0; i < 6; i++) {
+				for(var i = 0; i < taskList.length; i++) {
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
-
+					li.id = i + '';
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 
-					a.appendChild(createInfoItem('机房编号', '201738279'));
-					a.appendChild(createInfoItem('勘查负责人', '王志亮'));
-					a.appendChild(createInfoItem('设计负责人', '王志亮'));
-					a.appendChild(createInfoItem('施工负责人', '王志亮'));
-					a.appendChild(createInfoItem('工程状态', '勘查中'));
+					a.appendChild(createInfoItem('机房编号', taskList[i].task_code));
+					a.appendChild(createInfoItem('勘查负责人', taskList[i].prospecting));
+					a.appendChild(createInfoItem('设计负责人', taskList[i].plan));
+					a.appendChild(createInfoItem('施工负责人', taskList[i].construction));
+					a.appendChild(createInfoItem('工程状态', taskList[i].task_state));
 
 					li.appendChild(a);
 					fragment.appendChild(li);
@@ -76,7 +117,11 @@
 			}
 
 			mui('.mui-table-view').on('tap', 'li', function(e) {
-				var roomTitle = this.innerHTML;
+				var index = this.getAttribute('id') - 0;
+
+				var roomId = taskList[index].task_code;
+
+				window.localStorage.setItem(RoomId, roomId); // 保存机房编号，后面会一直用到。
 
 				mui.openWindow({
 					url: 'main.html',

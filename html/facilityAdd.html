@@ -46,9 +46,10 @@
 				<div class="item-div">
 					<div class="item-name">所属机架</div>
 					<div class="item-value">
-						<button id="rack_id" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="rack_idSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='rack_id' type="hidden" value='' class='param'></input>
 
 				<div id="rackManage" class="mui-table-view-cell" style="margin-top: -10px;">
 					<p style="float: right; color: dodgerblue;">没有找到机架？</p>
@@ -57,9 +58,10 @@
 				<div class="item-div">
 					<div class="item-name">所属规格</div>
 					<div class="item-value">
-						<button id="device_plot" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="device_plotSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='device_plot' type="hidden" value='' class='param'></input>
 
 				<div id="plotManage" class="mui-table-view-cell" style="margin-top: -10px;">
 					<p style="float: right; color: dodgerblue;">没有找到规格？</p>
@@ -89,9 +91,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
-						<button id="start_time" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
+						<button id="start_timeSel" class="mui-btn mui-btn-block mybtn2">请选择日期</button>
 					</div>
 				</div>
+				<input id='start_time' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空调与设备送风方向</div>
@@ -187,11 +190,11 @@
 		</script>
 
 		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
+			var start_timeSel = document.getElementById('start_timeSel');
+			start_timeSel.addEventListener('tap', function() {
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
+					start_timeSel.innerHTML = selectItems.text;
 					//selectItems.value;
 					picker.dispose();
 				});

@@ -26,8 +26,9 @@ var TokenKey = "TokenKey";
 var UserName = "UserName";
 var LoginName = "LoginName";
 
-var SaveUserName = 'SaveUserName';
+var SaveUserName = 'SaveUserName'; // 登录的用户名
 var SavePwd = 'SavePwd';
+var RoomId = 'RoomId'; // 机房编号
 
 var CheckSavePwd = 'CheckSavePwd';
 var CheckAutoLogin = 'CheckAutoLogin';
@@ -36,10 +37,3 @@ var VersionName = '1.9.2';
 var VersionCode = '192';
 
 var FIR_LINK = 'https://fir.im/d6qx';
-
-var FONT_SIZE = 'FONT_SIZE';
-
-var HOME_ACTION_TYPE = 'HOME_ACTION_TYPE';
-var HOME_ACTION_TAP = '单击';
-var HOME_ACTION_DOUBLETAP = '双击';
-var HOME_ACTION_LONGTAP = '长按';
