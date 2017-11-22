@@ -22,11 +22,13 @@
 
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
+				<input id='id' type="hidden" value='' class='param'></input>
+				<input id='engroom_code' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机房名称</div>
 					<div class="item-value mui-input-row">
-						<input id="name" type="text" class="mui-input-speech mui-input-clear param">
+						<input id="name" type="text" class="param" disabled="disabled">
 					</div>
 				</div>
 
@@ -46,10 +48,11 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机房大楼</div>
-					<div class="item-value mui-input-row">
-						<input id="big_type" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="big_typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='big_type' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">类型</div>
@@ -142,7 +145,6 @@
 					</div>
 				</div>
 				<input id='start_time' type="hidden" value='' class='param'></input>
-				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">外墙朝向</div>
@@ -180,7 +182,7 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属区划</div>
 					<div class="item-value">
-						<button id="showCityPicker3" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="prov_idSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
 				<input id='prov_id' type="hidden" value='' class='param'></input>
@@ -239,10 +241,191 @@
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=x1C7K385dRjOuugisRHZuAkyoU9Cnm06"></script>
 		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
+			window.onload = function() {
+				requestDetail();
+			}
+
+			function requestDetail() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+					var info = {
+						userName: window.localStorage.getItem(SaveUserName),
+						engineroomId: window.localStorage.getItem(RoomId)
+					};
+					var url = getHost() + "/engineroomInterController/queryEngineroomInfo.json";
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+							responseDetail(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDetail(resp) {
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+
+				setValue(resp);
+			}
+
+			function requestUpdateDetail() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在提交数据...");
+
+					var map = getValue();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroomId'] = window.localStorage.getItem(RoomId);
+
+					console.log(JSON.stringify(map));
+
+					var url = getHost() + "/engineroomInterController/updateEngineroomInfo.json";
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+							responseUpdateDetail(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseUpdateDetail(resp) {
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+
+				mui.alert('保存成功', '提示', function() {
+					//mui.back();
+				});
+			}
+
+			// 查询客户信息
+			function requestCustomerInfo() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroomId'] = window.localStorage.getItem(RoomId);
+
+					var url = getHost() + "/customerInterController/queryCustomerList.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseCustomerInfo(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseCustomerInfo(resp) {
+				console.log(JSON.stringify(resp));
+
+				if(resp.respCode != '00') {}
+			}
+
+			// 查询机楼信息
+			function requestBuildList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroomId'] = window.localStorage.getItem(RoomId);
+
+					var url = getHost() + "/geospatialInterController/geospatialList.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseBuildList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseBuildList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.buildList.length; i++) {
+					var item = resp.buildList[i];
+					data.push({
+						value: item.	id,
+						text: item.mac_build_name
+					});
+				}
+
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('big_typeSel').innerHTML = selectItems[0].text;
+					document.getElementById('big_type').innerHTML = selectItems[0].value;
+				});
+			}
+		</script>
+
+		<script>
 			document.getElementById('getLocation').addEventListener('tap', function() {
 				mui.toast('正在进行定位，请稍候...')
 				var geolocation = new BMap.Geolocation();
@@ -279,21 +462,12 @@
 			}, false);
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				console.log(JSON.stringify(getValue()));
-				return;
-				
 				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
-						requestSave();
+						requestUpdateDetail();
 					}
 				})
 			}, false);
-
-			function requestSave() {
-				mui.alert('保存成功', '提示', function() {
-					mui.back();
-				});
-			}
 
 			document.getElementById('uploadImage').addEventListener('tap', function() {
 				var imageList = new Array(['机房全景图']);
@@ -318,19 +492,23 @@
 			});
 			cityPicker3.setData(cityData3);
 
-			var showCityPickerButton = document.getElementById('showCityPicker3');
+			var showCityPickerButton = document.getElementById('prov_idSel');
 			showCityPickerButton.addEventListener('tap', function(event) {
 				cityPicker3.show(function(items) {
 					showCityPickerButton.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
-					console.log(items[2]['value']);
-					//返回 false 可以阻止选择框的关闭
-					//return false;
+					document.getElementById('prov_id').innerHTML = items[2]['value'];
 				});
 			}, false);
 
 			var _getParam = function(obj, param) {
 				return obj[param] || '';
 			};
+		</script>
+
+		<script>
+			document.getElementById('big_typeSel').addEventListener('tap', function() {
+				requestBuildList();
+			}, false);
 		</script>
 
 		<script>
@@ -349,6 +527,7 @@
 			building_structureSel.addEventListener('tap', function(event) {
 				userPicker1.show(function(items) {
 					building_structureSel.innerHTML = items[0].text;
+					document.getElementById('building_structure').innerHTML = items[0].value;
 				});
 			}, false);
 		</script>
@@ -375,6 +554,7 @@
 			chamferSel.addEventListener('tap', function(event) {
 				userPicker2.show(function(items) {
 					chamferSel.innerHTML = items[0].text;
+					document.getElementById('chamfer').innerHTML = items[0].value;
 				});
 			}, false);
 		</script>
@@ -395,6 +575,7 @@
 			floor_typeSel.addEventListener('tap', function(event) {
 				userPicker3.show(function(items) {
 					floor_typeSel.innerHTML = items[0].text;
+					document.getElementById('floor_type').innerHTML = items[0].value;
 				});
 			}, false);
 		</script>
@@ -405,7 +586,7 @@
 				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 				picker.show(function(selectItems) {
 					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
+					document.getElementById('start_time').innerHTML = selectItems.value;
 					picker.dispose();
 				});
 			}, false);

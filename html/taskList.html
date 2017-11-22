@@ -20,17 +20,18 @@
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
 			<h1 id="title" class="mui-title">任务列表</h1>
-			<a class="mui-btn mui-btn-link mui-pull-right">6</a>
+			<a id="count" class="mui-btn mui-btn-link mui-pull-right"></a>
 		</header>
 
 		<div class="mui-content">
 			<ul class="mui-table-view" id="list">
 			</ul>
-
 		</div>
 
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript" src="../js/view.js"></script>
+		<script type="text/javascript" src="../js/constants.js" ></script>
+		<script type="text/javascript" src="../js/util.js" ></script>
 
 		<script type="text/javascript">
 			mui.init();
@@ -43,7 +44,7 @@
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
 					projectTitle = self.projectTitle;
-					proId = self.proId;
+					proId = self.projectId;
 
 					document.getElementById('title').innerHTML = projectTitle;
 
@@ -60,7 +61,7 @@
 						userName: window.localStorage.getItem(SaveUserName),
 						proId: proId
 					};
-					var url = getHost() + "queryTaskList.json";
+					var url = getHost() + "/taskInterController/taskList.json";
 					console.log(url);
 					mui.ajax(url, {
 						dataType: 'json',
@@ -87,6 +88,8 @@
 					mui.alert(resp.respMsg, "提示", null);
 					return;
 				}
+				
+				document.getElementById('count').innerHTML = resp.taskList.length;
 
 				taskList = resp.taskList;
 				var list = document.getElementById('list');

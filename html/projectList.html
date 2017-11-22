@@ -19,13 +19,13 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<h1 id="title" class="mui-title">项目列表</h1>
-			<a class="mui-btn mui-btn-link mui-pull-right">6</a>
+			<a id="count" class="mui-btn mui-btn-link mui-pull-right"></a>
 		</header>
 
 		<div class="mui-content">
 			<ul class="mui-table-view" id="list">
 			</ul>
-
+			
 		</div>
 
 		<script src="../js/mui.min.js"></script>
@@ -50,7 +50,7 @@
 					var info = {
 						userName: window.localStorage.getItem(SaveUserName)
 					};
-					var url = getHost() + "queryProList.json";
+					var url = getHost() + "/projectInterController/projectList.json";
 					console.log(url);
 					mui.ajax(url, {
 						dataType: 'json',
@@ -78,6 +78,9 @@
 					mui.alert(resp.respMsg, "提示", null);
 					return;
 				}
+				
+				document.getElementById('count').innerHTML = resp.proList.length;
+				
 				proList = resp.proList;
 				var list = document.getElementById('list');
 				// 首先清空下面的所有结点
@@ -91,6 +94,7 @@
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
 					li.id = i + '';
+					
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 					a.appendChild(createInfoItem('项目名称', proList[i].name));

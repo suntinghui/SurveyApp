@@ -1,5 +1,5 @@
 // http://103.43.185.166:8066/MobileOffice/
-var DEFAULT_HOST = '192.168.3.15:8080';
+var DEFAULT_HOST = '192.168.3.24:8080';
 
 function getLocalStoreageHost() {
 	var host = window.localStorage.getItem(SET_HOST);
@@ -11,7 +11,7 @@ function getLocalStoreageHost() {
 
 function getHost() {
 	var host = getLocalStoreageHost();
-	return 'http://' + host + '/blade/api/';
+	return 'http://' + host + '/blade';
 }
 
 var SET_HOST = 'SET_HOST';

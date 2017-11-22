@@ -56,14 +56,14 @@
 
 				<div class="mui-input-row">
 					<label style="font-size: 16px; font-family: '微软雅黑';">&nbsp;账号：</label>
-					<input id='userNameText' type="text" class="mui-input-clear mui-input" placeholder="请输入账号" style="font-size: 16px;">
+					<input id='userNameText' value='admin' type="text" class="mui-input-clear mui-input" placeholder="请输入账号" style="font-size: 16px;"></input>
 				</div>
 
 				<div id="line" style="margin: 1px 0px 5px 10px; background: lightgrey; height: 1px;"> </div>
 
 				<div class="mui-input-row" style="margin-top: 15px;">
 					<label style="font-size: 16px;font-family: '微软雅黑';">&nbsp;密码：</label>
-					<input id='passwordText' type="password" class="mui-input-password mui-input" placeholder="请输入密码" style="font-size: 16px;">
+					<input id='passwordText' value='admin' type="password" class="mui-input-password mui-input" placeholder="请输入密码" style="font-size: 16px;">
 				</div>
 
 				<div id="line" style="margin: 1px 0px 5px 10px; background: lightgrey; height: 1px;"></div>
@@ -150,7 +150,7 @@
 						password: passwordText.value
 					};
 
-					var url = getHost() + "login.json";
+					var url = getHost() + "/api/login.json";
 					console.log(url);
 					console.log(JSON.stringify(loginInfo));
 
