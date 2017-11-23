@@ -33,11 +33,12 @@
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">所属地理空间</div>
-					<div class="item-value mui-input-row">
-						<input id="geos_id" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-name">所属机楼</div>
+					<div class="item-value">
+						<button id="geos_idSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='geos_id' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">所属客户</div>
@@ -47,7 +48,7 @@
 				</div>
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">机房大楼</div>
+					<div class="item-name">机房大类</div>
 					<div class="item-value">
 						<button id="big_typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
@@ -170,7 +171,7 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">纬度</div>
 					<div class="item-value mui-input-row">
-						<input id="latitude" type="text" class="mui-input-speech mui-input-clear param">
+						<input id="dimension" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
 
@@ -213,10 +214,11 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">地板规格</div>
-					<div class="item-value mui-input-row">
-						<input id="floor_format" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="floor_formatSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='floor_format' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">静压箱高度</div>
@@ -247,6 +249,8 @@
 		<script type="text/javascript">
 			mui.init();
 
+			var respData;
+
 			window.onload = function() {
 				requestDetail();
 			}
@@ -258,7 +262,7 @@
 					plus.nativeUI.showWaiting("正在请求数据...");
 					var info = {
 						userName: window.localStorage.getItem(SaveUserName),
-						engineroomId: window.localStorage.getItem(RoomId)
+						engineroomId: window.localStorage.getItem(EngineroomId)
 					};
 					var url = getHost() + "/engineroomInterController/queryEngineroomInfo.json";
 					console.log(url);
@@ -288,7 +292,18 @@
 					return;
 				}
 
-				setValue(resp);
+				respData = resp;
+
+				setValue(respData);
+
+				pickerCtrlImp('big_type', 'big_typeSel', respData['big_type']);
+				pickerCtrlImp('building_structure', 'building_structureSel', respData['building_structure']);
+				pickerCtrlImp('chamfer', 'chamferSel', respData['chamfer']);
+				pickerCtrlImp('floor_type', 'floor_typeSel', respData['floor_type']);
+				pickerCtrlImp('floor_format', 'floor_formatSel', respData['floor_format']);
+
+				datePickerCtrlImp('start_time', 'start_timeSel', respData['start_time']);
+				cityPickerCtrlImp('prov_id', 'prov_idSel', respData['prov_id']);
 			}
 
 			function requestUpdateDetail() {
@@ -299,7 +314,7 @@
 
 					var map = getValue();
 					map['userName'] = window.localStorage.getItem(SaveUserName);
-					map['engineroomId'] = window.localStorage.getItem(RoomId);
+					map['engineroomId'] = window.localStorage.getItem(EngineroomId);
 
 					console.log(JSON.stringify(map));
 
@@ -326,14 +341,17 @@
 			}
 
 			function responseUpdateDetail(resp) {
-				if(resp.respCode != '00') {
+				try{
+					if(resp.respCode != '00') {
 					mui.alert(resp.respMsg, "提示", null);
 					return;
 				}
-
-				mui.alert('保存成功', '提示', function() {
-					//mui.back();
-				});
+				
+				mui.alert('保存成功');
+				
+				}catch(e){
+					mui.alert(JSON.stringify(resp));
+				}
 			}
 
 			// 查询客户信息
@@ -343,7 +361,7 @@
 				mui.plusReady(function() {
 					var map = new Object();
 					map['userName'] = window.localStorage.getItem(SaveUserName);
-					map['engineroomId'] = window.localStorage.getItem(RoomId);
+					map['engineroomId'] = window.localStorage.getItem(EngineroomId);
 
 					var url = getHost() + "/customerInterController/queryCustomerList.json";
 					mui.ajax(url, {
@@ -379,9 +397,11 @@
 				checkNetwork();
 
 				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
 					var map = new Object();
 					map['userName'] = window.localStorage.getItem(SaveUserName);
-					map['engineroomId'] = window.localStorage.getItem(RoomId);
+					map['engineroomId'] = window.localStorage.getItem(EngineroomId);
 
 					var url = getHost() + "/geospatialInterController/geospatialList.json";
 					mui.ajax(url, {
@@ -411,7 +431,7 @@
 				for(var i = 0; i < resp.buildList.length; i++) {
 					var item = resp.buildList[i];
 					data.push({
-						value: item.	id,
+						value: item.id,
 						text: item.mac_build_name
 					});
 				}
@@ -419,8 +439,8 @@
 				var userPicker = new mui.PopPicker();
 				userPicker.setData(data);
 				userPicker.show(function(selectItems) {
-					document.getElementById('big_typeSel').innerHTML = selectItems[0].text;
-					document.getElementById('big_type').innerHTML = selectItems[0].value;
+					document.getElementById('geos_idSel').innerHTML = selectItems[0].text;
+					document.getElementById('geos_id').innerHTML = selectItems[0].value;
 				});
 			}
 		</script>
@@ -433,7 +453,7 @@
 					if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 						var mk = new BMap.Marker(r.point);
 						document.getElementById('longitude').value = r.point.lng;
-						document.getElementById('latitude').value = r.point.lat;
+						document.getElementById('dimension').value = r.point.lat;
 
 					} else {
 						mui.toast('手机定位失败:' + this.getStatus());
@@ -445,7 +465,7 @@
 
 			document.getElementById('showLocation').addEventListener('tap', function() {
 				var longitude = document.getElementById('longitude').value;
-				var latitude = document.getElementById('latitude').value;
+				var dimension = document.getElementById('dimension').value;
 
 				mui.openWindow({
 					url: 'showLocation.html',
@@ -456,7 +476,7 @@
 					},
 					extras: {
 						longitude: longitude,
-						latitude: latitude
+						latitude: dimension
 					}
 				});
 			}, false);
@@ -487,108 +507,8 @@
 		</script>
 
 		<script>
-			var cityPicker3 = new mui.PopPicker({
-				layer: 3
-			});
-			cityPicker3.setData(cityData3);
-
-			var showCityPickerButton = document.getElementById('prov_idSel');
-			showCityPickerButton.addEventListener('tap', function(event) {
-				cityPicker3.show(function(items) {
-					showCityPickerButton.innerText = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
-					document.getElementById('prov_id').innerHTML = items[2]['value'];
-				});
-			}, false);
-
-			var _getParam = function(obj, param) {
-				return obj[param] || '';
-			};
-		</script>
-
-		<script>
-			document.getElementById('big_typeSel').addEventListener('tap', function() {
+			document.getElementById('geos_idSel').addEventListener('tap', function() {
 				requestBuildList();
-			}, false);
-		</script>
-
-		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '钢筋混凝土'
-			}, {
-				value: '2',
-				text: '框架结构'
-			}, {
-				value: '3',
-				text: '其他'
-			}]);
-			var building_structureSel = document.getElementById('building_structureSel');
-			building_structureSel.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					building_structureSel.innerHTML = items[0].text;
-					document.getElementById('building_structure').innerHTML = items[0].value;
-				});
-			}, false);
-		</script>
-
-		<script>
-			var userPicker2 = new mui.PopPicker();
-			userPicker2.setData([{
-				value: '1',
-				text: '上走线架'
-			}, {
-				value: '2',
-				text: '下走线架'
-			}, {
-				value: '3',
-				text: '双走线架'
-			}, {
-				value: '4',
-				text: '地板下走线'
-			}, {
-				value: '5',
-				text: '其他'
-			}]);
-			var chamferSel = document.getElementById('chamferSel');
-			chamferSel.addEventListener('tap', function(event) {
-				userPicker2.show(function(items) {
-					chamferSel.innerHTML = items[0].text;
-					document.getElementById('chamfer').innerHTML = items[0].value;
-				});
-			}, false);
-		</script>
-
-		<script>
-			var userPicker3 = new mui.PopPicker();
-			userPicker3.setData([{
-				value: '1',
-				text: '地砖'
-			}, {
-				value: '2',
-				text: '架空地板'
-			}, {
-				value: '3',
-				text: '其他'
-			}]);
-			var floor_typeSel = document.getElementById('floor_typeSel');
-			floor_typeSel.addEventListener('tap', function(event) {
-				userPicker3.show(function(items) {
-					floor_typeSel.innerHTML = items[0].text;
-					document.getElementById('floor_type').innerHTML = items[0].value;
-				});
-			}, false);
-		</script>
-
-		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					document.getElementById('start_time').innerHTML = selectItems.value;
-					picker.dispose();
-				});
 			}, false);
 		</script>
 

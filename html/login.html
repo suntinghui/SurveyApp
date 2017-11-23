@@ -114,7 +114,7 @@
 					window.setTimeout(loginReq, 2000);
 				}
 			};
-
+			
 			loginBtn.addEventListener("tap", function(event) {
 				loginReq();
 				//openMainPage();
@@ -179,14 +179,11 @@
 
 			function responseLogin(resp) {
 				console.log('登录响应：' + JSON.stringify(resp));
+				
 
 				if(resp.respCode == '00') {
 					// 保存用户信息
 					window.localStorage.setItem(TokenKey, resp.TokenKey);
-					window.localStorage.setItem(UserName, resp.UserName);
-					window.localStorage.setItem(LoginName, resp.LoginName);
-
-					// 保存登录用户名
 					window.localStorage.setItem(SaveUserName, userNameText.value);
 					window.localStorage.setItem(CheckSavePwd, savepwd.checked);
 					window.localStorage.setItem(CheckAutoLogin, autologin.checked);

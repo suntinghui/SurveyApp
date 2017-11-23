@@ -25,7 +25,7 @@
 		<div class="mui-content">
 			<ul class="mui-table-view" id="list">
 			</ul>
-			
+
 		</div>
 
 		<script src="../js/mui.min.js"></script>
@@ -39,12 +39,58 @@
 			var proList;
 
 			window.onload = function() {
+				requestDictData();
 				requestList();
+			}
+
+			// 查询数据字典
+			function requestDictData() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在初始化...");
+					
+					var info = {
+						userName: window.localStorage.getItem(SaveUserName)
+					};
+					var url = getHost() + "/api/getDictList.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+							
+							responseDictData(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+			
+			function responseDictData(resp) {
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+				
+				window.localStorage.setItem(DataCenter, JSON.stringify(resp));
+				
+				console.log('数据字典已保存！');
 			}
 
 			// 请求项目列表
 			function requestList() {
 				checkNetwork();
+
 				mui.plusReady(function() {
 					plus.nativeUI.showWaiting("正在请求数据...");
 					var info = {
@@ -73,14 +119,13 @@
 			}
 
 			function responseList(resp) {
-				console.log('项目列表响应：' + JSON.stringify(resp));
 				if(resp.respCode != '00') {
 					mui.alert(resp.respMsg, "提示", null);
 					return;
 				}
-				
+
 				document.getElementById('count').innerHTML = resp.proList.length;
-				
+
 				proList = resp.proList;
 				var list = document.getElementById('list');
 				// 首先清空下面的所有结点
@@ -94,7 +139,7 @@
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
 					li.id = i + '';
-					
+
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 					a.appendChild(createInfoItem('项目名称', proList[i].name));
@@ -111,7 +156,7 @@
 				var index = this.getAttribute('id') - 0;
 				var projectTitle = proList[index].name;
 				var projectId = proList[index].id;
-				
+
 				mui.openWindow({
 					url: 'taskList.html',
 					id: Math.random() + '',

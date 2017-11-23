@@ -107,7 +107,7 @@
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 
-					a.appendChild(createInfoItem('机房编号', taskList[i].task_code));
+					a.appendChild(createInfoItem('机房编号', taskList[i].engineroom_id));
 					a.appendChild(createInfoItem('勘查负责人', taskList[i].prospecting));
 					a.appendChild(createInfoItem('设计负责人', taskList[i].plan));
 					a.appendChild(createInfoItem('施工负责人', taskList[i].construction));
@@ -122,9 +122,9 @@
 			mui('.mui-table-view').on('tap', 'li', function(e) {
 				var index = this.getAttribute('id') - 0;
 
-				var roomId = taskList[index].task_code;
+				var engineroomId = taskList[index].engineroom_id;
 
-				window.localStorage.setItem(RoomId, roomId); // 保存机房编号，后面会一直用到。
+				window.localStorage.setItem(EngineroomId, engineroomId); // 保存机房编号，后面会一直用到。
 
 				mui.openWindow({
 					url: 'main.html',
