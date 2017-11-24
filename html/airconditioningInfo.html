@@ -242,9 +242,26 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js" ></script>
+		<script type="text/javascript" src="../js/util.js" ></script>
+		<script type="text/javascript" src="../js/view.js" ></script>
+		<script type="text/javascript" src="../js/survey.js" ></script>
 
 		<script type="text/javascript">
 			mui.init();
+			
+			var item;
+			
+			window.onload = function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					item = JSON.parse(self.itemJSON);
+
+					setValue(item);
+
+					datePickerCtrlImp('start_time', 'start_timeSel', item['start_time']);
+				})
+			}
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
@@ -290,18 +307,6 @@
 					}
 				});
 
-			}, false);
-		</script>
-
-		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
-				});
 			}, false);
 		</script>
 

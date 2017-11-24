@@ -14,7 +14,7 @@ var MAX_PAGE_SIZE = 19860727;
 var TokenKey = "TokenKey";
 var SaveUserName = 'SaveUserName'; // 登录的用户名
 var SavePwd = 'SavePwd';
-var EngineroomId = 'EngineroomId'; // 机房编号
+var Engineroom_id = 'Engineroom_id'; // 机房编号
 var DataCenter = 'DataCenter'; 
 
 var CheckSavePwd = 'CheckSavePwd';

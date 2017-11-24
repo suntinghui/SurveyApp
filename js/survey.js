@@ -28,21 +28,6 @@ function setValue(obj) {
 	console.log('set属性总数：' + i);
 }
 
-function setPickDefaultText(realCtrlName, selCtrlName, defaultValue) {
-	var selCtrl = document.getElementById(selCtrlName);
-
-	// 根据defaultValue查询text
-	var dictData = JSON.parse(window.localStorage.getItem(DataCenter)).dictData;
-	var list = dictData[realCtrlName].dictList;
-	for(var index in list) {
-		var item = list[index];
-		if(item.id == defaultValue) {
-			selCtrl.innerHTML = item.name;
-			return;
-		}
-	}
-}
-
 // 从数据字典中取值
 function getDataFromDic(type) {
 	var dictData = JSON.parse(window.localStorage.getItem(DataCenter)).dictData;
@@ -59,16 +44,37 @@ function getDataFromDic(type) {
 	return data;
 }
 
+function setPickDefaultText(realCtrlName, selCtrlName, dictKey, defaultValue) {
+	var selCtrl = document.getElementById(selCtrlName);
+
+	// 根据defaultValue查询text
+	var dictData = JSON.parse(window.localStorage.getItem(DataCenter)).dictData;
+	var list = dictData[dictKey].dictList;
+	for(var index in list) {
+		var item = list[index];
+		if(item.num == defaultValue) {
+			// 设置默认填充值
+			selCtrl.innerHTML = item.name;
+			return;
+		}
+	}
+}
+
 // 具有普遍性，不处理特殊情况
-function pickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
+// dictKey 数据字典中的key
+// defaultValue一般为后台传过来的值
+function pickerCtrlImp(realCtrlName, selCtrlName, dictKey, defaultValue) {
 	var realCtrl = document.getElementById(realCtrlName);
 	var selCtrl = document.getElementById(selCtrlName);
 
 	var userPicker = new mui.PopPicker();
-	userPicker.setData(getDataFromDic(realCtrlName));
+	userPicker.setData(getDataFromDic(dictKey));
 
+	// 设置打开时的默认选中项
 	userPicker.pickers[0].setSelectedValue(defaultValue, 2000);
-	setPickDefaultText(realCtrlName, selCtrlName, defaultValue);
+
+	// 设置未点开时显示的内容
+	setPickDefaultText(realCtrlName, selCtrlName, dictKey, defaultValue);
 
 	selCtrl.addEventListener('tap', function(event) {
 		userPicker.show(function(items) {
@@ -82,13 +88,15 @@ function pickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 function datePickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 	var realCtrl = document.getElementById(realCtrlName);
 	var selCtrl = document.getElementById(selCtrlName);
-	
+
+	// 设置表面显示值
 	selCtrl.innerHTML = defaultValue;
 
 	selCtrl.addEventListener('tap', function() {
 		var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
 
-		picker.pickers[0].setSelectedValue(defaultValue, 1000);
+		// 设置打开时间控件后显示的值
+		picker.setSelectedValue(defaultValue, 1000);
 
 		picker.show(function(selectItems) {
 			selCtrl.innerHTML = selectItems.text;
@@ -103,8 +111,8 @@ function datePickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 function cityPickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 	var realCtrl = document.getElementById(realCtrlName);
 	var selCtrl = document.getElementById(selCtrlName);
-	
-	selCtrl.innerHTML = defaultValue;
+
+	selCtrl.innerHTML = queryCityName(defaultValue);
 
 	var cityPicker3 = new mui.PopPicker({
 		layer: 3
@@ -122,6 +130,7 @@ function cityPickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 		return obj[param] || '';
 	};
 
+	// 设置点开后的默认选中项
 	if(defaultValue && defaultValue.length == 6) {
 		// 设定省初始值
 		cityPicker3.pickers[0].setSelectedValue(defaultValue.substr(0, 2) + '0000', 0, function() {
@@ -132,4 +141,34 @@ function cityPickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 			});
 		});
 	}
+}
+
+// 根据ID查询城市
+function queryCityName(code) {
+	var areaName = '';
+	var proCode = code.substr(0, 2) + '0000';
+	var cityCode = code.substr(0, 4) + '00';
+
+	for(var i = 0; i < cityData3.length; i++) {
+		if(cityData3[i].value == proCode) {
+			areaName += (cityData3[i].text + '-');
+
+			for(var j = 0; j < cityData3[i].children.length; j++) {
+				if(cityData3[i].children[j].value == cityCode) {
+					areaName += (cityData3[i].children[j].text + '-');
+
+					for(var k = 0; k < cityData3[i].children[j].children.length; k++) {
+						if(cityData3[i].children[j].children[k].value == code) {
+							areaName += (cityData3[i].children[j].children[k].text);
+							
+							return areaName;
+						}
+					}
+				}
+			}
+
+		}
+	}
+	
+	return '未知';
 }

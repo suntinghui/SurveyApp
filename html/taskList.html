@@ -122,9 +122,8 @@
 			mui('.mui-table-view').on('tap', 'li', function(e) {
 				var index = this.getAttribute('id') - 0;
 
-				var engineroomId = taskList[index].engineroom_id;
-
-				window.localStorage.setItem(EngineroomId, engineroomId); // 保存机房编号，后面会一直用到。
+				var engineroom_id = taskList[index].engineroom_id;
+				window.localStorage.setItem(Engineroom_id, engineroom_id); // 保存机房编号，后面会一直用到。
 
 				mui.openWindow({
 					url: 'main.html',

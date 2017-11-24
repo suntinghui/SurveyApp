@@ -23,6 +23,8 @@
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
 
+				<input id="id" type="hidden" class="param">
+
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">列头柜编号</div>
 					<div class="item-value mui-input-row">
@@ -80,7 +82,6 @@
 					</div>
 				</div>
 				<input id='distributors_code' type="hidden" value='' class='param'></input>
-				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -104,9 +105,26 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
+
+			var item;
+
+			window.onload = function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					item = JSON.parse(self.itemJSON);
+
+					setValue(item);
+
+					pickerCtrlImp('type', 'typeSel', 'power_supply_type', item['type']);
+					datePickerCtrlImp('start_time', 'start_timeSel', item['start_time']);
+				})
+			};
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
@@ -116,12 +134,6 @@
 				})
 			}, false);
 
-			function requestUpdate() {
-				mui.alert('修改成功', '提示', function() {
-					mui.back();
-				});
-			}
-
 			document.getElementById('deleteBox').addEventListener('tap', function() {
 				mui.confirm('删除后不可恢复，请确认', '确认删除', ['取消', '删除'], function(e) {
 					if(e.index == 1) {
@@ -130,63 +142,154 @@
 				})
 			}, false);
 
-			function requestDelete() {
-				mui.alert('删除成功', '提示', function() {
-					mui.back();
+			function requestUpdate() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/colheadcabinetInterController/updateColheadcabinet.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUpdate(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
+			}
+
+			function responseUpdate(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('修改成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
+
+			function requestDelete() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/colheadcabinetInterController/deleteColheadcabinet.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseDelete(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDelete(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('删除成功', '提示', function() {
+						plus.webview.currentWebview().opener().reload();
+						mui.back();
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
 			}
 		</script>
 
 		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '配电柜一'
-			}, {
-				value: '2',
-				text: '配电柜二'
-			}, {
-				value: '3',
-				text: '配电柜三'
-			}]);
+			document.getElementById('distributors_codeSel').addEventListener('tap', function() {
+				requestDistributorsList();
+			}, false);
 
-			var distributors_codeSel = document.getElementById('distributors_codeSel');
-			distributors_codeSel.addEventListener('tap', function(event) {
+			// 查询
+			function requestDistributorsList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在查询配柜...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/distributorsInterController/queryDistributors.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseDistributorsList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDistributorsList(resp) {
+				var items = [];
+				for(var i = 0; i < resp.list.length; i++) {
+					items.push({
+						value: resp.list[i].id,
+						text: resp.list[i].name
+					});
+				}
+
+				var userPicker1 = new mui.PopPicker();
+				userPicker1.setData(items);
+
 				userPicker1.show(function(items) {
 					distributors_codeSel.innerHTML = items[0].text;
+					document.getElementById('distributors_code').value = items[0].value;
 				});
-			}, false);
-		</script>
 
-		<script>
-			var userPicker2 = new mui.PopPicker();
-			userPicker2.setData([{
-				value: 'ac',
-				text: '交流'
-			}, {
-				value: 'dc',
-				text: '直流'
-			}]);
-			var typeSel = document.getElementById('typeSel');
-			typeSel.addEventListener('tap', function(event) {
-				userPicker2.show(function(items) {
-					typeSel.innerHTML = items[0].text;
-				});
-			}, false);
+			}
 		</script>
-
-		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
-				});
-			}, false);
-		</script>
-
 	</body>
 
 </html>

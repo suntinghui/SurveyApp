@@ -262,8 +262,9 @@
 					plus.nativeUI.showWaiting("正在请求数据...");
 					var info = {
 						userName: window.localStorage.getItem(SaveUserName),
-						engineroomId: window.localStorage.getItem(EngineroomId)
+						engineroom_id: window.localStorage.getItem(Engineroom_id)
 					};
+					
 					var url = getHost() + "/engineroomInterController/queryEngineroomInfo.json";
 					console.log(url);
 					mui.ajax(url, {
@@ -296,11 +297,11 @@
 
 				setValue(respData);
 
-				pickerCtrlImp('big_type', 'big_typeSel', respData['big_type']);
-				pickerCtrlImp('building_structure', 'building_structureSel', respData['building_structure']);
-				pickerCtrlImp('chamfer', 'chamferSel', respData['chamfer']);
-				pickerCtrlImp('floor_type', 'floor_typeSel', respData['floor_type']);
-				pickerCtrlImp('floor_format', 'floor_formatSel', respData['floor_format']);
+				pickerCtrlImp('big_type', 'big_typeSel', 'big_type', respData['big_type']);
+				pickerCtrlImp('building_structure', 'building_structureSel', 'building_structure', respData['building_structure']);
+				pickerCtrlImp('chamfer', 'chamferSel',  'chamfer', respData['chamfer']);
+				pickerCtrlImp('floor_type', 'floor_typeSel', 'floor_type', respData['floor_type']);
+				pickerCtrlImp('floor_format', 'floor_formatSel', 'floor_format',respData['floor_format']);
 
 				datePickerCtrlImp('start_time', 'start_timeSel', respData['start_time']);
 				cityPickerCtrlImp('prov_id', 'prov_idSel', respData['prov_id']);
@@ -314,7 +315,7 @@
 
 					var map = getValue();
 					map['userName'] = window.localStorage.getItem(SaveUserName);
-					map['engineroomId'] = window.localStorage.getItem(EngineroomId);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
 
 					console.log(JSON.stringify(map));
 
@@ -361,7 +362,7 @@
 				mui.plusReady(function() {
 					var map = new Object();
 					map['userName'] = window.localStorage.getItem(SaveUserName);
-					map['engineroomId'] = window.localStorage.getItem(EngineroomId);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
 
 					var url = getHost() + "/customerInterController/queryCustomerList.json";
 					mui.ajax(url, {
@@ -401,7 +402,7 @@
 
 					var map = new Object();
 					map['userName'] = window.localStorage.getItem(SaveUserName);
-					map['engineroomId'] = window.localStorage.getItem(EngineroomId);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
 
 					var url = getHost() + "/geospatialInterController/geospatialList.json";
 					mui.ajax(url, {

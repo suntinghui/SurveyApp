@@ -16,12 +16,14 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
-			<h1 id="title" class="mui-title">UPS信息</h1>
+			<h1 id="title" class="mui-title">机列信息</h1>
 			<a id='deleteBox' class="mui-btn mui-btn-link mui-pull-right" style="color: red;">删除</a>
 		</header>
 
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
+
+				<input id="id" type="hidden" class="param">
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机列名称</div>
@@ -53,7 +55,7 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">热通道距离</div>
-					<div class="item-value">
+					<div class="item-value mui-input-row">
 						<input id="hotPass" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
@@ -67,14 +69,25 @@
 		</div>
 
 		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript" src="../js/view.js"></script>
 		<script src="../js/mui.picker.js"></script>
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
+
+			var item;
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				item = JSON.parse(self.itemJSON);
+
+				setValue(item);
+			})
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
@@ -84,12 +97,6 @@
 				})
 			}, false);
 
-			function requestUpdate() {
-				mui.alert('修改成功', '提示', function() {
-					mui.back();
-				});
-			}
-
 			document.getElementById('deleteBox').addEventListener('tap', function() {
 				mui.confirm('删除后不可恢复，请确认', '确认删除', ['取消', '删除'], function(e) {
 					if(e.index == 1) {
@@ -98,10 +105,94 @@
 				})
 			}, false);
 
-			function requestDelete() {
-				mui.alert('删除成功', '提示', function() {
-					mui.back();
+			function requestUpdate() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/maccolInterController/updateMaccolInfo.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUpdate(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
+			}
+
+			function responseUpdate(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('修改成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
+
+			function requestDelete() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/maccolInterController/deleteMaccolInfo.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseDelete(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDelete(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('删除成功', '提示', function() {
+						plus.webview.currentWebview().opener().reload();
+						mui.back();
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
 			}
 		</script>
 
