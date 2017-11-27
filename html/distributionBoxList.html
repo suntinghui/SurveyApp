@@ -20,7 +20,7 @@
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
 			<h1 id="title" class="mui-title">配电柜列表</h1>
-			<a class="mui-icon mui-icon-plus mui-pull-right" id="addBox"></a>
+			<a class="mui-icon mui-icon-plus mui-pull-right" id="add"></a>
 		</header>
 
 		<div class="mui-content">
@@ -31,48 +31,75 @@
 
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript" src="../js/view.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
-			
-			window.onload = function() {
-				refresh();
-			};
-			
-			document.getElementById('addBox').addEventListener('tap', function(){
-				mui.openWindow({
-					url: 'distributionBoxAdd.html',
-					id: Math.random() + '',
-					preload: true,
-					show: {
-						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
-					}
-				});
-			}, false);
 
-			function refresh() {
+			window.onload = function() {
+				requestList();
+			};
+
+			function requestList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+					var info = {
+						userName: window.localStorage.getItem(SaveUserName),
+						engineroom_id: window.localStorage.getItem(Engineroom_id)
+					};
+
+					var url = getHost() + "/distributorsInterController/queryDistributors.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseList(resp) {
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+
 				var list = document.getElementById('list');
 				// 首先清空下面的所有结点
 				while(list.hasChildNodes()) {
 					list.removeChild(list.firstChild);
 				}
-
 				// 开始添加新的节点
 				var fragment = document.createDocumentFragment();
 				var li;
-				for(var i = 0; i < 6; i++) {
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
+					li.id = JSON.stringify(item);
 
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 
-					a.appendChild(createInfoItem('配电柜名称', '配电柜名称'));
-					a.appendChild(createInfoItem('编号', '编号'));
-					a.appendChild(createInfoItem('厂家型号', '型号'));
+					a.appendChild(createInfoItem('编号', item.dis_code));
+					a.appendChild(createInfoItem('名称', item.name));
 
 					li.appendChild(a);
 					fragment.appendChild(li);
@@ -81,6 +108,7 @@
 			}
 
 			mui('.mui-table-view').on('tap', 'li', function(e) {
+				var itemStr = this.getAttribute('id');
 
 				mui.openWindow({
 					url: 'distributionBoxInfo.html',
@@ -90,10 +118,21 @@
 						aniShow: 'pop-in'
 					},
 					extras: {
-						id: ''
+						itemJSON: itemStr
 					}
 				});
 			});
+
+			document.getElementById('add').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'distributionBoxAdd.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					}
+				});
+			}, false);
 		</script>
 	</body>
 

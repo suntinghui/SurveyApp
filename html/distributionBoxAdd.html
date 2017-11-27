@@ -60,11 +60,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">功能</div>
 					<div class="item-value">
-						<button id="gongnengSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="functionSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
-				<input id='gongneng' type="hidden" value='' class='param'></input>
-				
+				<input id='function' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">电流总限额</div>
@@ -94,7 +93,6 @@
 					</div>
 				</div>
 				<input id='acdc' type="hidden" value='' class='param'></input>
-				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -103,7 +101,6 @@
 					</div>
 				</div>
 				<input id='start_time' type="hidden" value='' class='param'></input>
-				
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空开总数量</div>
@@ -111,7 +108,6 @@
 						<input id="aocn_count" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
-				
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空开已使用数量</div>
 					<div class="item-value mui-input-row">
@@ -138,73 +134,73 @@
 		<script src="../js/mui.picker.js"></script>
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
-		<script type="text/javascript" src="../js/mui.dtpicker.js" ></script>
+		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
+			window.onload = function() {
+				pickerCtrlImp('acdc', 'acdcSel', 'acdc', '0');
+				pickerCtrlImp('function', 'functionSel', 'function', '0');
+				datePickerCtrlImp('start_time', 'start_timeSel', getyyyyMMdd(new Date()));
+			};
+
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
-						requestSave();
+						requestUpdate();
 					}
 				})
 			}, false);
 
-			function requestSave() {
-				mui.alert('保存成功', '提示', function() {
-					mui.back();
+			function requestUpdate() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/distributorsInterController/addDistributors.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUpdate(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
 			}
-		</script>
 
-		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: 'ac',
-				text: '交流'
-			}, {
-				value: 'dc',
-				text: '直流'
-			}]);
-			var acdcSel = document.getElementById('acdcSel');
-			acdcSel.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					acdcSel.innerHTML = items[0].text;
-				});
-			}, false);
-		</script>
+			function responseUpdate(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('添加成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
 
-		<script>
-			var userPicker2 = new mui.PopPicker();
-			userPicker2.setData([{
-				value: '1',
-				text: '空调'
-			}, {
-				value: '2',
-				text: '主设备'
-			}, {
-				value: '3',
-				text: '其他'
-			}]);
-			var gongnengSel = document.getElementById('gongnengSel');
-			gongnengSel.addEventListener('tap', function(event) {
-				userPicker2.show(function(items) {
-					gongnengSel.innerHTML = items[0].text;
-				});
-			}, false);
-		</script>
-
-		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
-				});
-			}, false);
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
 		</script>
 
 	</body>

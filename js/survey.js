@@ -91,6 +91,7 @@ function datePickerCtrlImp(realCtrlName, selCtrlName, defaultValue) {
 
 	// 设置表面显示值
 	selCtrl.innerHTML = defaultValue;
+	realCtrl.value = defaultValue;
 
 	selCtrl.addEventListener('tap', function() {
 		var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
