@@ -102,14 +102,6 @@
 					</div>
 				</div>
 
-				<div class="item-div mui-table-view-cell" style="display: none;">
-					<div class="item-name">所属配电柜</div>
-					<div class="item-value">
-						<button id="distributors_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
-					</div>
-				</div>
-				<input id='distributors_code' type="hidden" value='' class='param'></input>
-
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
 					<div class="item-value">
@@ -196,34 +188,6 @@
 					mui.alert(resp.respMsg, "提示", null);
 				}
 			}
-		</script>
-
-		<script>
-			// 选择配电柜
-			document.getElementById('distributors_codeSel').addEventListener('tap', function() {
-				mui.openWindow({
-					url: 'UPS_Distributors.html',
-					id: Math.random() + '',
-					preload: true,
-					show: {
-						aniShow: 'pop-in'
-					},
-					extras: {
-						radioType: true,
-						selected: item['distributors_code'],
-						firevent: 'distributors_codeSel'
-					}
-				});
-			}, false);
-
-			// 选择完所属的配电柜后返回数据
-			window.addEventListener('distributors_codeSel', function(event) {
-				//获得事件参数
-				var data = event.detail.data;
-				console.log(JSON.stringify(data));
-
-				document.getElementById('distributors_code').value = JSON.stringify(data);
-			});
 		</script>
 
 	</body>
