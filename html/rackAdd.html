@@ -64,7 +64,7 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">冷通道编号</div>
-					<div class="item-value">
+					<div class="item-value mui-input-row">
 						<input id="col_code" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
@@ -142,9 +142,9 @@
 
 			window.onload = function() {
 
-				pickerCtrlImp('publicPass', 'publicPassSel', 'publicPass', item['publicPass']);
-				pickerCtrlImp('inAirSort', 'inAirSortSel', 'inAirSort', item['inAirSort']);
-				pickerCtrlImp('outAirSort', 'outAirSortSel', 'outAirSort', item['outAirSort']);
+				pickerCtrlImp('publicPass', 'publicPassSel', 'publicPass', '0');
+				pickerCtrlImp('inAirSort', 'inAirSortSel', 'inAirSort', '0');
+				pickerCtrlImp('outAirSort', 'outAirSortSel', 'outAirSort', '0');
 			};
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
