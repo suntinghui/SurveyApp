@@ -134,10 +134,11 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机列布放</div>
-					<div class="item-value mui-input-row">
-						<input id="rackPlot" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="rackPlotSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='rackPlot' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -302,6 +303,7 @@
 				pickerCtrlImp('chamfer', 'chamferSel',  'chamfer', respData['chamfer']);
 				pickerCtrlImp('floor_type', 'floor_typeSel', 'floor_type', respData['floor_type']);
 				pickerCtrlImp('floor_format', 'floor_formatSel', 'floor_format',respData['floor_format']);
+				pickerCtrlImp('rackPlot', 'rackPlotSel', 'rackPlot', respData['rackPlot']);
 
 				datePickerCtrlImp('start_time', 'start_timeSel', respData['start_time']);
 				cityPickerCtrlImp('prov_id', 'prov_idSel', respData['prov_id']);
