@@ -31,48 +31,75 @@
 
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript" src="../js/view.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
 			window.onload = function() {
-				refresh();
+				requestList();
 			};
 
-			document.getElementById('add').addEventListener('tap', function() {
-				mui.openWindow({
-					url: 'outdoorsMacAdd.html',
-					id: Math.random() + '',
-					preload: true,
-					show: {
-						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
-					}
-				});
-			}, false);
+			function requestList() {
+				checkNetwork();
 
-			function refresh() {
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+					var info = {
+						userName: window.localStorage.getItem(SaveUserName),
+						engineroom_id: window.localStorage.getItem(Engineroom_id)
+					};
+
+					var url = getHost() + "/airOutDoorInterController/queryAirOutDoor.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseList(resp) {
+				if(resp.respCode != '00') {
+					mui.alert(resp.respMsg, "提示", null);
+					return;
+				}
+
 				var list = document.getElementById('list');
 				// 首先清空下面的所有结点
 				while(list.hasChildNodes()) {
 					list.removeChild(list.firstChild);
 				}
-
 				// 开始添加新的节点
 				var fragment = document.createDocumentFragment();
 				var li;
-				for(var i = 0; i < 6; i++) {
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
+					li.id = JSON.stringify(item);
 
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 
-					a.appendChild(createInfoItem('编号', '编号'));
-					a.appendChild(createInfoItem('类型', '类型'));
-					a.appendChild(createInfoItem('品牌', '品牌'));
+					a.appendChild(createInfoItem('编号', item.outdoors_mac_code));
+					a.appendChild(createInfoItem('厂家', item.company));
 
 					li.appendChild(a);
 					fragment.appendChild(li);
@@ -81,6 +108,7 @@
 			}
 
 			mui('.mui-table-view').on('tap', 'li', function(e) {
+				var itemStr = this.getAttribute('id');
 
 				mui.openWindow({
 					url: 'outdoorsMacInfo.html',
@@ -90,10 +118,21 @@
 						aniShow: 'pop-in'
 					},
 					extras: {
-						id: ''
+						itemJSON: itemStr
 					}
 				});
 			});
+
+			document.getElementById('add').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'outdoorsMacAdd.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					}
+				});
+			}, false);
 		</script>
 	</body>
 

@@ -98,8 +98,7 @@
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
 
-					a.appendChild(createInfoItem('编号', item.name));
-					a.appendChild(createInfoItem('规格', item.company + " " + item.format));
+					a.appendChild(createInfoItem('编号', item.air_code));
 
 					li.appendChild(a);
 					fragment.appendChild(li);
@@ -123,6 +122,19 @@
 					}
 				});
 			});
+			
+			document.getElementById('add').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'airconditioningAdd.html',
+					id: Math.random() + '',
+					preload: true,
+					show: {
+						aniShow: 'pop-in'
+					}
+				});
+			}, false);
+			
+			
 		</script>
 	</body>
 

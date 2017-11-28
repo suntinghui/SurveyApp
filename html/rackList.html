@@ -91,7 +91,7 @@
 
 					li = document.createElement('li');
 					li.className = 'mui-table-view-cell';
-					li.id = rack.id + '';
+					li.id = JSON.stringify(rack);
 
 					var a = document.createElement('a');
 					a.className = 'mui-navigate-right';
@@ -111,15 +111,12 @@
 					preload: true,
 					show: {
 						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
 					}
 				});
 			}, false);
 
 			mui('.mui-table-view').on('tap', 'li', function(e) {
-				var id = this.getAttribute('id');
+				var itemStr = this.getAttribute('id');
 
 				mui.openWindow({
 					url: 'rackInfo.html',
@@ -129,7 +126,7 @@
 						aniShow: 'pop-in'
 					},
 					extras: {
-						id: id
+						itemJSON: itemStr
 					}
 				});
 			});

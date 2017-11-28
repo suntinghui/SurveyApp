@@ -23,12 +23,15 @@
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
 
+				<input id='id' type="hidden" value='' class='param'></input>
+
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备类型</div>
-					<div class="item-value mui-input-row">
-						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='type' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备编号</div>
@@ -52,7 +55,7 @@
 				</div>
 				<input id='rack_id' type="hidden" value='' class='param'></input>
 
-				<div id="rackManage" class="mui-table-view-cell" style="margin-top: -10px;">
+				<div id="rackManage" class="mui-table-view-cell" style="margin-top: -10px; display: none;">
 					<p style="float: right; color: dodgerblue;">没有找到机架？</p>
 				</div>
 
@@ -77,17 +80,19 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">进出风方式</div>
-					<div class="item-value mui-input-row">
-						<input id="inoutsort" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="inoutsortSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='inoutsort' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">布放方式</div>
-					<div class="item-value  mui-input-row">
-						<input id="layingsort" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="layingsortSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='layingsort' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -99,10 +104,11 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空调与设备送风方向</div>
-					<div class="item-value mui-input-row">
-						<input id="direction_of_air_supply" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="direction_of_air_supplySel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='direction_of_air_supply' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备的接电线路数</div>
@@ -132,9 +138,26 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
+
+			var item;
+			window.onload = function() {
+				var self = plus.webview.currentWebview();
+				item = JSON.parse(self.itemJSON);
+
+				setValue(item);
+
+				pickerCtrlImp('layingsort', 'layingsortSel', 'layingsort', item['layingsort']);
+				pickerCtrlImp('type', 'typeSel', 'device_type', item['type']);
+				pickerCtrlImp('inoutsort', 'inoutsortSel', 'inoutsort', item['inoutsort']);
+				pickerCtrlImp('direction_of_air_supply', 'direction_of_air_supplySel', 'direction_of_air_supply', item['direction_of_air_supply']);
+				datePickerCtrlImp('start_time', 'start_timeSel', item['start_time']);
+			};
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
@@ -144,12 +167,6 @@
 				})
 			}, false);
 
-			function requestUpdate() {
-				mui.alert('修改成功', '提示', function() {
-					mui.back();
-				});
-			}
-
 			document.getElementById('deleteBox').addEventListener('tap', function() {
 				mui.confirm('删除后不可恢复，请确认', '确认删除', ['取消', '删除'], function(e) {
 					if(e.index == 1) {
@@ -158,93 +175,222 @@
 				})
 			}, false);
 
-			function requestDelete() {
-				mui.alert('删除成功', '提示', function() {
-					mui.back();
-				});
-			}
-
-			document.getElementById('rackManage').addEventListener('tap', function() {
-				mui.openWindow({
-					url: 'rackList.html',
-					id: Math.random() + '',
-					preload: true,
-					show: {
-						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
-					}
-				});
-			}, false);
-
 			document.getElementById('plotManage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'deviceSpecList.html',
-					id: Math.random() + '',
+					id: Math.random() + "", // 该id在刷新上有使用，不可更改
 					preload: true,
 					show: {
 						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
 					}
 				});
 			}, false);
+
+			function requestUpdate() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/facilityInterController/updateFacility.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUpdate(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseUpdate(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('修改成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
+
+			function requestDelete() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/facilityInterController/deleteFacility.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseDelete(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDelete(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('删除成功', '提示', function() {
+						plus.webview.currentWebview().opener().reload();
+						mui.back();
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
 		</script>
 
 		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '机架一'
-			}, {
-				value: '2',
-				text: '机架二'
-			}, {
-				value: '3',
-				text: '机架三'
-			}]);
-
-			var rack_idSel = document.getElementById('rack_idSel');
-			rack_idSel.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					rack_idSel.innerHTML = items[0].text;
-				});
+			document.getElementById('rack_idSel').addEventListener('tap', function() {
+				requestRackList();
 			}, false);
+
+			// 查询机架信息
+			function requestRackList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/rackinfoInterController/rackList.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseRackList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseRackList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.rackList.length; i++) {
+					var item = resp.rackList[i];
+					data.push({
+						value: item.rack_code,
+						text: item.rack_code
+					});
+				}
+
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('rack_idSel').innerHTML = selectItems[0].text;
+					document.getElementById('rack_id').value = selectItems[0].value;
+				});
+			}
 		</script>
 
 		<script>
-			var userPicker2 = new mui.PopPicker();
-			userPicker2.setData([{
-				value: '1',
-				text: '规格一'
-			}, {
-				value: '2',
-				text: '规格二'
-			}, {
-				value: '3',
-				text: '规格三'
-			}]);
-
-			var device_plotSel = document.getElementById('device_plotSel');
-			device_plotSel.addEventListener('tap', function(event) {
-				userPicker2.show(function(items) {
-					device_plotSel.innerHTML = items[0].text;
-				});
+			document.getElementById('device_plotSel').addEventListener('tap', function() {
+				requestPlotList();
 			}, false);
-		</script>
 
-		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
+			// 查询规格信息
+			function requestPlotList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/facilityPlotInterController/queryFacilityPlot.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responsePlotList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
-			}, false);
+			}
+
+			function responsePlotList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+					data.push({
+						value: item.plot_code,
+						text: item.plot_code
+					});
+				}
+
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('device_plotSel').innerHTML = selectItems[0].text;
+					document.getElementById('device_plot').value = selectItems[0].value;
+				});
+			}
 		</script>
 
 	</body>

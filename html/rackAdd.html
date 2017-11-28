@@ -21,8 +21,8 @@
 
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
-
 				<div class="item-div mui-table-view-cell">
+
 					<div class="item-name">机架名称</div>
 					<div class="item-value mui-input-row">
 						<input id="name" type="text" class="mui-input-speech mui-input-clear param">
@@ -46,12 +46,12 @@
 				<div class="item-div">
 					<div class="item-name">所属机列</div>
 					<div class="item-value">
-						<button id="mac_colSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
+						<button id="mac_col_idSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
-				<input id='mac_col' type="hidden" value='' class='param'></input>
+				<input id='mac_col_id' type="hidden" value='' class='param'></input>
 
-				<div id="mac_colSel_manage" class="mui-table-view-cell" style="margin-top: -10px;">
+				<div id="mac_col_idSel_manage" class="mui-table-view-cell" style="margin-top: -10px;">
 					<p style="float: right; color: dodgerblue;">没有找到机列？</p>
 				</div>
 
@@ -78,40 +78,31 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机架进风方式</div>
-					<div class="item-value mui-input-row">
-						<input id="inAirSort" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="inAirSortSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='inAirSort' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机架进风方式</div>
-					<div class="item-value mui-input-row">
-						<input id="outAirSort" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="outAirSortSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='outAirSort' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">机架公用通道</div>
 					<div class="item-value">
-						<input id="publicPass" type="text" class="mui-input-speech mui-input-clear param">
+						<button id="publicPassSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
-
-				<div class="item-div ">
-					<div class="item-name">所属制冷设备</div>
-					<div class="item-value">
-						<button id="air_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
-					</div>
-				</div>
-				<input id='air_code' type="hidden" value='' class='param'></input>
-
-				<div id="air_codeSel_manage" class="mui-table-view-cell" style="margin-top: -10px;">
-					<p style="float: right; color: dodgerblue;">没有找到制冷设备？</p>
-				</div>
+				<input id='publicPass' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">几U机架</div>
-					<div class="item-value">
+					<div class="item-value mui-input-row">
 						<input id="rack_u_count" type="text" class="mui-input-speech mui-input-clear param">
 					</div>
 				</div>
@@ -142,40 +133,77 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
+			window.onload = function() {
+
+				pickerCtrlImp('publicPass', 'publicPassSel', 'publicPass', item['publicPass']);
+				pickerCtrlImp('inAirSort', 'inAirSortSel', 'inAirSort', item['inAirSort']);
+				pickerCtrlImp('outAirSort', 'outAirSortSel', 'outAirSort', item['outAirSort']);
+			};
+
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+				mui.confirm('请仔细核实信息是否正确？', '确认添加', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
-						requestSave();
+						requestAdd();
 					}
 				})
 			}, false);
 
-			function requestSave() {
-				mui.alert('保存成功', '提示', function() {
-					mui.back();
+			function requestAdd() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/rackinfoInterController/addRackInfo.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseAdd(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
+			}
+
+			function responseAdd(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('添加成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
 			}
 		</script>
 
+		<!--查询列头柜-->
 		<script>
-			document.getElementById('air_codeSel_manage').addEventListener('tap', function() {
-				mui.openWindow({
-					url: 'airconditioningList.html',
-					id: Math.random() + '',
-					preload: true,
-					show: {
-						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
-					}
-				});
-			}, false);
-
 			document.getElementById('colheadcabinet_codeSel_manage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'colheadcabinetList.html',
@@ -183,89 +211,133 @@
 					preload: true,
 					show: {
 						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
 					}
 				});
 			}, false);
 
-			document.getElementById('mac_colSel_manage').addEventListener('tap', function() {
+			document.getElementById('colheadcabinet_codeSel').addEventListener('tap', function() {
+				requestColheadList();
+			}, false);
+
+			function requestColheadList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/colheadcabinetInterController/queryColheadcabinet.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseColheadList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseColheadList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+					data.push({
+						value: item.col_code,
+						text: item.col_code
+					});
+				}
+
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('colheadcabinet_codeSel').innerHTML = selectItems[0].text;
+					document.getElementById('colheadcabinet_code').value = selectItems[0].value;
+				});
+			}
+		</script>
+
+		<!--查询机列-->
+		<script>
+			document.getElementById('mac_col_idSel_manage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'macColList.html',
 					id: Math.random() + '',
 					preload: true,
 					show: {
 						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
 					}
 				});
 			}, false);
-		</script>
 
-		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '制冷设备一'
-			}, {
-				value: '2',
-				text: '制冷设备二'
-			}, {
-				value: '3',
-				text: '制冷设备三'
-			}]);
-
-			var air_codeSel = document.getElementById('air_codeSel');
-			air_codeSel.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					air_codeSel.innerHTML = items[0].text;
-				});
+			document.getElementById('mac_col_idSel').addEventListener('tap', function() {
+				requestMaccolList();
 			}, false);
-		</script>
 
-		<script>
-			var userPicker2 = new mui.PopPicker();
-			userPicker2.setData([{
-				value: '1',
-				text: '列头柜一'
-			}, {
-				value: '2',
-				text: '列头柜二'
-			}, {
-				value: '3',
-				text: '列头柜三'
-			}]);
+			function requestMaccolList() {
+				checkNetwork();
 
-			var colheadcabinet_codeSel = document.getElementById('colheadcabinet_codeSel');
-			colheadcabinet_codeSel.addEventListener('tap', function(event) {
-				userPicker2.show(function(items) {
-					colheadcabinet_codeSel.innerHTML = items[0].text;
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/maccolInterController/queryMaccolInfo.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseMaccolList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
-			}, false);
-		</script>
+			}
 
-		<script>
-			var userPicker3 = new mui.PopPicker();
-			userPicker3.setData([{
-				value: '1',
-				text: '机列一'
-			}, {
-				value: '2',
-				text: '机列二'
-			}, {
-				value: '3',
-				text: '机列三'
-			}]);
+			function responseMaccolList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+					data.push({
+						value: item.mac_col_code,
+						text: item.mac_col_code
+					});
+				}
 
-			var mac_colSel = document.getElementById('mac_colSel');
-			mac_colSel.addEventListener('tap', function(event) {
-				userPicker3.show(function(items) {
-					mac_colSel.innerHTML = items[0].text;
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('mac_col_idSel').innerHTML = selectItems[0].text;
+					document.getElementById('mac_col_id').value = selectItems[0].value;
 				});
-			}, false);
+			}
 		</script>
 
 	</body>

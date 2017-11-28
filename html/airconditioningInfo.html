@@ -23,6 +23,8 @@
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
 
+				<input id="id" type="hidden" class="param">
+
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">名称</div>
 					<div class="item-value mui-input-row">
@@ -53,17 +55,19 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">品牌</div>
-					<div class="item-value mui-input-row">
-						<input id="brand" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="brandSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id="brand" type="hidden" class="param" value="">
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">类型</div>
 					<div class="item-value">
-						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
+						<button id="typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id="type" type="hidden" class="param" value="">
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">额定功率</div>
@@ -81,24 +85,27 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">制冷方式</div>
-					<div class="item-value mui-input-row">
-						<input id="mode" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="modeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='mode' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备布局</div>
 					<div class="item-value">
-						<input id="plot" type="text" class="mui-input-speech mui-input-clear param">
+						<button id="plotSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='plot' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">送风方式</div>
-					<div class="item-value mui-input-row">
-						<input id="supplyMode" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="supplyModeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='supplyMode' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">额定制冷量</div>
@@ -226,7 +233,7 @@
 						<button id="rack_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
-				<input id='rack_code' type="hidden" value='' class='param'></input>
+				<input id='rackCode' type="hidden" value='' class='param'></input>
 
 			</div>
 
@@ -242,16 +249,16 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
-		<script type="text/javascript" src="../js/constants.js" ></script>
-		<script type="text/javascript" src="../js/util.js" ></script>
-		<script type="text/javascript" src="../js/view.js" ></script>
-		<script type="text/javascript" src="../js/survey.js" ></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
+		<script type="text/javascript" src="../js/view.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
-			
+
 			var item;
-			
+
 			window.onload = function() {
 				mui.plusReady(function() {
 					var self = plus.webview.currentWebview();
@@ -259,6 +266,11 @@
 
 					setValue(item);
 
+					pickerCtrlImp('type', 'typeSel', 'airconditioning_type', item['type']);
+					pickerCtrlImp('brand', 'brandSel', 'brand', item['brand']);
+					pickerCtrlImp('mode', 'modeSel', 'mode', item['mode']);
+					pickerCtrlImp('plot', 'plotSel', 'plot', item['plot']);
+					pickerCtrlImp('supplyMode', 'supplyModeSel', 'supplyMode', item['supplyMode']);
 					datePickerCtrlImp('start_time', 'start_timeSel', item['start_time']);
 				})
 			}
@@ -271,12 +283,6 @@
 				})
 			}, false);
 
-			function requestUpdate() {
-				mui.alert('修改成功', '提示', function() {
-					mui.back();
-				});
-			}
-
 			document.getElementById('deleteBox').addEventListener('tap', function() {
 				mui.confirm('删除后不可恢复，请确认', '确认删除', ['取消', '删除'], function(e) {
 					if(e.index == 1) {
@@ -285,10 +291,94 @@
 				})
 			}, false);
 
-			function requestDelete() {
-				mui.alert('删除成功', '提示', function() {
-					mui.back();
+			function requestUpdate() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/airConditioningInterController/updateAirConditioning.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUpdate(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
+			}
+
+			function responseUpdate(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('修改成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
+
+			function requestDelete() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/airConditioningInterController/deleteAirConditioning.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseDelete(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDelete(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('删除成功', '提示', function() {
+						plus.webview.currentWebview().opener().reload();
+						mui.back();
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
 			}
 		</script>
 
@@ -303,10 +393,18 @@
 						aniShow: 'pop-in'
 					},
 					extras: {
-						id: ''
+						radioType: false,
+						selected: item['rackList'],
+						firevent: 'refreshRack'
 					}
 				});
 
+			}, false);
+
+			window.addEventListener('refreshRack', function(event) {
+				var data = event.detail.data;
+				console.log(data.value);
+				document.getElementById('rackCode').value = data.value;
 			}, false);
 		</script>
 

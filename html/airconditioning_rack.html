@@ -3,67 +3,227 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>空调 多对多 机架</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" href="../css/parse.css" />
-		<link rel="stylesheet" href="../css/survey.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.indexedlist.css" />
 
 		<style>
-			.name {
-				margin: 8px auto;
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+			
+			.mui-bar {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+			
+			#done.mui-disabled {
+				color: gray;
 			}
 		</style>
 	</head>
 
 	<body>
+
 		<header id="header" class="mui-bar mui-bar-nav navbar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left backbtn"></a>
-			<h1 id="title" class="mui-title">选择机架</h1>
-			<a id='done' class="mui-btn mui-btn-link mui-pull-right">完成</a>
+			<h1 id="title" class="mui-title">所属机架</h1>
+			<a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled backbtn">完成</a>
 		</header>
 
 		<div class="mui-content">
-			<form class="mui-input-group" id="form">
-			</form>
-
+			<div id='list' class="mui-indexed-list">
+				<div class="mui-indexed-list-search mui-input-row mui-search">
+					<input type="search" class="mui-input-speech mui-input-clear mui-indexed-list-search-input" placeholder="搜索">
+				</div>
+				<div class="mui-indexed-list-bar" style="visibility: hidden;">
+					<a>A</a>
+					<a>B</a>
+					<a>C</a>
+					<a>D</a>
+					<a>E</a>
+					<a>F</a>
+					<a>G</a>
+					<a>H</a>
+					<a>I</a>
+					<a>J</a>
+					<a>K</a>
+					<a>L</a>
+					<a>M</a>
+					<a>N</a>
+					<a>O</a>
+					<a>P</a>
+					<a>Q</a>
+					<a>R</a>
+					<a>S</a>
+					<a>T</a>
+					<a>U</a>
+					<a>V</a>
+					<a>W</a>
+					<a>X</a>
+					<a>Y</a>
+					<a>Z</a>
+				</div>
+				<div class="mui-indexed-list-alert"></div>
+				<div class="mui-indexed-list-inner">
+					<div class="mui-indexed-list-empty-alert">没有数据</div>
+					<ul class="mui-table-view" id="ul">
+					</ul>
+				</div>
+			</div>
 		</div>
 
 		<script src="../js/mui.min.js"></script>
+		<script src="../js/constants.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.indexedlist.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/view.js"></script>
 
 		<script type="text/javascript">
-			mui.init();
+			var radioType = false; // 单选 or 多选
+			var selected;
+			var firevent = '';
 
 			window.onload = function() {
-				refresh();
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					radioType = self.radioType;
+					selected = self.selected;
+					firevent = self.firevent;
+
+					requestList();
+				});
 			};
 
-			document.getElementById('done').addEventListener('tap', function() {
-				mui.back();
-			}, false);
+			function requestList() {
+				checkNetwork();
 
-			function refresh() {
-				var form = document.getElementById('form');
-				// 首先清空下面的所有结点
-				while(form.hasChildNodes()) {
-					form.removeChild(form.firstChild);
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在加载...");
+				});
+
+				var info = {
+					userName: window.localStorage.getItem(SaveUserName),
+					engineroom_id: window.localStorage.getItem(Engineroom_id)
 				}
 
-				form.appendChild(createCheckbox('机架一', '1', false, false));
-				form.appendChild(createCheckbox('机架一', '1', true, false));
-				form.appendChild(createCheckbox('机架一', '1', true, true));
-				form.appendChild(createCheckbox('机架一', '1', true, false));
-				form.appendChild(createCheckbox('机架一', '1', false, true));
-				form.appendChild(createCheckbox('机架一', '1', true, false));
-			}
+				var url = getHost() + '/rackinfoInterController/rackList.json';
+				mui.ajax(url, {
+					dataType: 'json',
+					data: JSON.stringify(info),
+					type: 'post',
+					timeout: TIMEOUT,
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						mui.plusReady(function() {
+							plus.nativeUI.closeWaiting(); //这里监听页面是否加载完毕，完成后关闭等待框
+						});
 
-			/*
-			mui('.mui-input-group').on('change', 'input', function() {
-				var value = this.checked ? "true" : "false";
-				this.previousElementSibling.innerText = "checked：" + value;
+						responseList(data.rackList);
+					},
+					error: function(xhr, type, errorThrown) {
+						mui.plusReady(function() {
+							plus.nativeUI.closeWaiting(); //这里监听页面是否加载完毕，完成后关闭等待框
+						});
+
+						mui.toast(getHttpErrorDesp(type));
+					}
+				});
+			} // end requestList
+
+			function responseList(resp) {
+				var ul = document.getElementById('ul');
+				// 首先清空下面的所有结点
+				while(ul.hasChildNodes()) {
+					ul.removeChild(ul.firstChild);
+				}
+
+				if(resp.length == 0)
+					return;
+
+				var fragment = document.createDocumentFragment();
+
+				for(var i = 0; i < resp.length; i++) {
+					var li = document.createElement('li');
+					li.className = "mui-table-view-cell mui-indexed-list-item mui-left yaomei";
+					li.classList.add(radioType ? 'mui-radio' : 'mui-checkbox');
+
+					var type = (radioType ? "radio" : "checkbox");
+					var checked = (contains(selected, resp[i].rack_code) ? ' checked ' : ' ');
+					li.innerHTML = '<input name="radio1" value=' + resp[i].rack_code + ' type=' + type + checked + ' />' + resp[i].rack_code;
+					fragment.appendChild(li);
+				}
+				ul.appendChild(fragment);
+
+				mui("#list").indexedList().findElements();
+
+			}; // end responseList
+
+			mui.ready(function() {
+				var header = document.querySelector('header.mui-bar');
+				var list = document.getElementById('list');
+				var done = document.getElementById('done');
+				//calc hieght
+				list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+				//create
+				window.indexedList = new mui.IndexedList(list);
+				//done event
+				done.addEventListener('tap', function() {
+					var checkboxArray = [].slice.call(list.querySelectorAll('input[type="' + (radioType ? 'radio' : 'checkbox') + '"]'));
+					var checkedTexts = [];
+					var checkedValues = [];
+					checkboxArray.forEach(function(box) {
+						if(box.checked) {
+							checkedTexts.push(box.parentNode.innerText);
+							checkedValues.push(box.value);
+						}
+					});
+
+					if(checkedTexts.length > 0) {
+						mui.plusReady(function() {
+							var prePage = plus.webview.currentWebview().opener();
+							mui.fire(prePage, firevent, {
+								data: {
+									text: checkedTexts,
+									value: checkedValues,
+								}
+							});
+
+							mui.back();
+						})
+
+					} else {
+						mui.alert('还没有选择数据');
+					}
+				}, false);
+
+				mui('.mui-indexed-list-inner').on('change', 'input', function() {
+					var count = list.querySelectorAll('input[type="' + (radioType ? 'radio' : 'checkbox') + '"]:checked').length;
+
+					if(radioType) {
+						done.innerHTML = '完成';
+					} else {
+						var value = count ? "完成(" + count + ")" : "完成";
+						done.innerHTML = value;
+					}
+
+					if(count) {
+						if(done.classList.contains("mui-disabled")) {
+							done.classList.remove("mui-disabled");
+						}
+					} else {
+						if(!done.classList.contains("mui-disabled")) {
+							done.classList.add("mui-disabled");
+						}
+					}
+				});
 			});
-			*/
+
 		</script>
 	</body>
 

@@ -23,11 +23,12 @@
 			<div class="mui-card mui-table-view">
 
 				<div class="item-div mui-table-view-cell">
-					<div class="item-name">主设备类型</div>
-					<div class="item-value mui-input-row">
-						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-name">设备类型</div>
+					<div class="item-value">
+						<button id="typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='type' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备编号</div>
@@ -51,7 +52,7 @@
 				</div>
 				<input id='rack_id' type="hidden" value='' class='param'></input>
 
-				<div id="rackManage" class="mui-table-view-cell" style="margin-top: -10px;">
+				<div id="rackManage" class="mui-table-view-cell" style="margin-top: -10px; display: none;">
 					<p style="float: right; color: dodgerblue;">没有找到机架？</p>
 				</div>
 
@@ -76,17 +77,19 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">进出风方式</div>
-					<div class="item-value mui-input-row">
-						<input id="inoutsort" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="inoutsortSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='inoutsort' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">布放方式</div>
-					<div class="item-value  mui-input-row">
-						<input id="layingsort" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="layingsortSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id="layingsort" type="hidden" class="param" />
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -98,10 +101,11 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">空调与设备送风方向</div>
-					<div class="item-value mui-input-row">
-						<input id="direction_of_air_supply" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="direction_of_air_supplySel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id='direction_of_air_supply' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备的接电线路数</div>
@@ -122,7 +126,6 @@
 			<div style="margin: 20px 10px;">
 				<button id='confirmBtn' class="mui-btn mui-btn-block mui-btn-primary mybtn">确&nbsp;&nbsp;定</button>
 			</div>
-
 		</div>
 
 		<script src="../js/mui.min.js"></script>
@@ -131,74 +134,201 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
+			window.onload = function() {
+				pickerCtrlImp('layingsort', 'layingsortSel', 'layingsort', '0');
+				pickerCtrlImp('type', 'typeSel', 'device_type', '0');
+				pickerCtrlImp('inoutsort', 'inoutsortSel', 'inoutsort', '0');
+				pickerCtrlImp('direction_of_air_supply', 'direction_of_air_supplySel', 'direction_of_air_supply', '0');
+				datePickerCtrlImp('start_time', 'start_timeSel', getyyyyMMdd(new Date()));
+			};
+
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+				mui.confirm('请仔细核实信息是否正确？', '确认添加', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
-						requestSave();
+						requestAdd();
 					}
 				})
-			}, false);
-
-			function requestSave() {
-				mui.alert('保存成功', '提示', function() {
-					mui.back();
-				});
-			}
-
-			document.getElementById('rackManage').addEventListener('tap', function() {
-				mui.toast('机架管理');
 			}, false);
 
 			document.getElementById('plotManage').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'deviceSpecList.html',
-					id: Math.random() + '',
+					id: Math.random() + "", // 该id在刷新上有使用，不可更改
 					preload: true,
 					show: {
 						aniShow: 'pop-in'
-					},
-					extras: {
-						id: ''
 					}
 				});
 			}, false);
+
+			function requestAdd() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/facilityInterController/addFacility.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseAdd(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseAdd(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('添加成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
 		</script>
 
 		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '配电柜一'
-			}, {
-				value: '2',
-				text: '配电柜二'
-			}, {
-				value: '3',
-				text: '配电柜三'
-			}]);
-
-			var distributors_code = document.getElementById('distributors_code');
-			distributors_code.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					distributors_code.innerHTML = items[0].text;
-				});
+			document.getElementById('rack_idSel').addEventListener('tap', function() {
+				requestRackList();
 			}, false);
+
+			// 查询机架信息
+			function requestRackList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/rackinfoInterController/rackList.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseRackList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseRackList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.rackList.length; i++) {
+					var item = resp.rackList[i];
+					data.push({
+						value: item.rack_code,
+						text: item.rack_code
+					});
+				}
+
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('rack_idSel').innerHTML = selectItems[0].text;
+					document.getElementById('rack_id').value = selectItems[0].value;
+				});
+			}
 		</script>
 
 		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
-				});
+			document.getElementById('device_plotSel').addEventListener('tap', function() {
+				requestPlotList();
 			}, false);
+
+			// 查询规格信息
+			function requestPlotList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/facilityPlotInterController/queryFacilityPlot.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responsePlotList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responsePlotList(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+					data.push({
+						value: item.plot_code,
+						text: item.plot_code
+					});
+				}
+
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('device_plotSel').innerHTML = selectItems[0].text;
+					document.getElementById('device_plot').value = selectItems[0].value;
+				});
+			}
 		</script>
 
 	</body>

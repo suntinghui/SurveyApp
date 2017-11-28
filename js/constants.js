@@ -5,7 +5,7 @@ function getHost() {
 	return 'http://' + DEFAULT_HOST + '/blade';
 }
 
-var TIMEOUT = 20000
+var TIMEOUT = 30000
 
 var PAGE_SIZE = 20;
 var MAX_PAGE_SIZE = 19860727;

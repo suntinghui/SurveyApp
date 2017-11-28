@@ -23,6 +23,8 @@
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
 
+				<input id="id" type="hidden" class="param" value="" />
+
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">室外机编号</div>
 					<div class="item-value mui-input-row">
@@ -39,17 +41,19 @@
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">品牌</div>
-					<div class="item-value mui-input-row">
-						<input id="brand" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="brandSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id="brand" type="hidden" class="param">
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">类型</div>
-					<div class="item-value mui-input-row">
-						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
+					<div class="item-value">
+						<button id="typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id="type" type="hidden" class="param">
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -147,9 +151,29 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
+
+			var item;
+			window.onload = function() {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					item = JSON.parse(self.itemJSON);
+
+					setValue(item);
+
+					pickerCtrlImp('type', 'typeSel', 'out_airconditioning_type', item['type']);
+					pickerCtrlImp('brand', 'brandSel', 'brand', item['brand']);
+					pickerCtrlImp('west_facing', 'west_facingSel', 'west_facing', item['west_facing']);
+					pickerCtrlImp('air_smooth', 'air_smoothSel', 'air_smooth', item['air_smooth']);
+					pickerCtrlImp('shelter', 'shelterSel', 'shelter', item['shelter']);
+					datePickerCtrlImp('start_time', 'start_timeSel', item['start_time']);
+				})
+			}
 
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
 				mui.confirm('请仔细核实信息是否正确？', '确认修改', ['取消', '提交'], function(e) {
@@ -159,12 +183,6 @@
 				})
 			}, false);
 
-			function requestUpdate() {
-				mui.alert('修改成功', '提示', function() {
-					mui.back();
-				});
-			}
-
 			document.getElementById('deleteBox').addEventListener('tap', function() {
 				mui.confirm('删除后不可恢复，请确认', '确认删除', ['取消', '删除'], function(e) {
 					if(e.index == 1) {
@@ -173,98 +191,153 @@
 				})
 			}, false);
 
-			function requestDelete() {
-				mui.alert('删除成功', '提示', function() {
-					mui.back();
+			function requestUpdate() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/airOutDoorInterController/updateAirOutDoor.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUpdate(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
+			}
+
+			function responseUpdate(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('修改成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
+
+			function requestDelete() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/airOutDoorInterController/deleteAirOutDoor.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseDelete(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseDelete(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('删除成功', '提示', function() {
+						plus.webview.currentWebview().opener().reload();
+						mui.back();
+					});
+
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
 			}
 		</script>
 
+		<!--查询定内机-->
 		<script>
-			var start_timeSel = document.getElementById('start_timeSel');
-			start_timeSel.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_timeSel.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
-				});
+			document.getElementById('air_codeSel').addEventListener('tap', function() {
+				requestAir();
 			}, false);
-		</script>
 
-		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '室内机一'
-			}, {
-				value: '2',
-				text: '室内机二'
-			}, {
-				value: '3',
-				text: '室内机三'
-			}]);
+			function requestAir() {
+				checkNetwork();
 
-			var air_codeSel = document.getElementById('air_codeSel');
-			air_codeSel.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					air_codeSel.innerHTML = items[0].text;
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var map = new Object();
+					map['userName'] = window.localStorage.getItem(SaveUserName);
+					map['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/airConditioningInterController/queryAirConditioning.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(map),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseAir(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
-			}, false);
-		</script>
+			}
 
-		<script>
-			var userPicker2 = new mui.PopPicker();
-			userPicker2.setData([{
-				value: '1',
-				text: '西晒'
-			}, {
-				value: '2',
-				text: '非西晒'
-			}]);
+			function responseAir(resp) {
+				var data = new Array();
+				for(var i = 0; i < resp.list.length; i++) {
+					var item = resp.list[i];
+					data.push({
+						value: item.air_code,
+						text: item.air_code
+					});
+				}
 
-			var west_facingSel = document.getElementById('west_facingSel');
-			west_facingSel.addEventListener('tap', function(event) {
-				userPicker2.show(function(items) {
-					west_facingSel.innerHTML = items[0].text;
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(data);
+				userPicker.show(function(selectItems) {
+					document.getElementById('air_codeSel').innerHTML = selectItems[0].text;
+					document.getElementById('air_code').value = selectItems[0].value;
 				});
-			}, false);
-		</script>
-
-		<script>
-			var userPicker3 = new mui.PopPicker();
-			userPicker3.setData([{
-				value: '1',
-				text: '顺畅'
-			}, {
-				value: '2',
-				text: '不顺畅'
-			}]);
-
-			var air_smoothSel = document.getElementById('air_smoothSel');
-			air_smoothSel.addEventListener('tap', function(event) {
-				userPicker3.show(function(items) {
-					air_smoothSel.innerHTML = items[0].text;
-				});
-			}, false);
-		</script>
-
-		<script>
-			var userPicker4 = new mui.PopPicker();
-			userPicker4.setData([{
-				value: '1',
-				text: '是'
-			}, {
-				value: '2',
-				text: '否'
-			}]);
-
-			var shelterSel = document.getElementById('shelterSel');
-			shelterSel.addEventListener('tap', function(event) {
-				userPicker4.show(function(items) {
-					shelterSel.innerHTML = items[0].text;
-				});
-			}, false);
+			}
 		</script>
 
 	</body>

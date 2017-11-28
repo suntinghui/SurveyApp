@@ -21,7 +21,7 @@
 
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
-				
+
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">名称</div>
 					<div class="item-value mui-input-row">
@@ -81,9 +81,10 @@
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">设备类别</div>
 					<div class="item-value">
-						<input id="type" type="text" class="mui-input-speech mui-input-clear param">
+						<button id="device_typeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
+				<input id="device_type" type="hidden" class="param">
 
 			</div>
 
@@ -99,56 +100,70 @@
 		<script src="../js/mui.poppicker.js"></script>
 		<script type="text/javascript" src="../js/city.data-3.js"></script>
 		<script type="text/javascript" src="../js/mui.dtpicker.js"></script>
+		<script type="text/javascript" src="../js/constants.js"></script>
+		<script type="text/javascript" src="../js/survey.js"></script>
+		<script type="text/javascript" src="../js/util.js"></script>
 
 		<script type="text/javascript">
 			mui.init();
 
+			window.onload = function() {
+				pickerCtrlImp('device_type', 'device_typeSel', 'device_type', '0');
+			};
+
 			document.getElementById('confirmBtn').addEventListener('tap', function() {
-				mui.confirm('请仔细核实信息是否正确？', '确认提交', ['取消', '提交'], function(e) {
+				mui.confirm('请仔细核实信息是否正确？', '确认添加', ['取消', '提交'], function(e) {
 					if(e.index == 1) {
-						requestSave();
+						requestAdd();
 					}
 				})
 			}, false);
 
-			function requestSave() {
-				mui.alert('保存成功', '提示', function() {
-					mui.back();
+			function requestAdd() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在请求数据...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/facilityPlotInterController/addFacilityPlot.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseAdd(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
 				});
 			}
-		</script>
 
-		<script>
-			var userPicker1 = new mui.PopPicker();
-			userPicker1.setData([{
-				value: '1',
-				text: '配电柜一'
-			}, {
-				value: '2',
-				text: '配电柜二'
-			}, {
-				value: '3',
-				text: '配电柜三'
-			}]);
-			
-			var distributors_code = document.getElementById('distributors_code');
-			distributors_code.addEventListener('tap', function(event) {
-				userPicker1.show(function(items) {
-					distributors_code.innerHTML = items[0].text;
-				});
-			}, false);
-		</script>
+			function responseAdd(resp) {
+				if(resp.respCode == '00') {
+					mui.alert('添加成功', '提示', function() {
+						mui.plusReady(function() {
+							plus.webview.currentWebview().opener().reload();
+							mui.back();
+						})
+					});
 
-		<script>
-			var start_time = document.getElementById('start_time');
-			start_time.addEventListener('tap', function() {
-				var picker = new mui.DtPicker(JSON.parse('{"type":"date","beginYear":1950,"endYear":2030}'));
-				picker.show(function(selectItems) {
-					start_time.innerHTML = selectItems.text;
-					//selectItems.value;
-					picker.dispose();
-				});
-			}, false);
+				} else {
+					mui.alert(resp.respMsg, "提示", null);
+				}
+			}
 		</script>
 
 	</body>
