@@ -220,7 +220,7 @@
 				userPicker1.setData(items);
 
 				userPicker1.show(function(items) {
-					distributors_codeSel.innerHTML = items[0].text;
+					document.getElementById('distributors_codeSel').innerHTML = items[0].text;
 					document.getElementById('distributors_code').value = items[0].value;
 				});
 

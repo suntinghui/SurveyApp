@@ -22,7 +22,7 @@
 
 		<div class="mui-content">
 			<div class="mui-card mui-table-view">
-				
+
 				<input id="id" type="hidden" class="param">
 
 				<div class="item-div mui-table-view-cell">
@@ -90,12 +90,28 @@
 				</div>
 
 				<div class="item-div mui-table-view-cell">
+					<div class="item-name">所属UPS</div>
+					<div class="item-value">
+						<button id="ups_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+				<input id='ups_code' type="hidden" value='' class='param'></input>
+
+				<div class="item-div mui-table-view-cell">
 					<div class="item-name">交直流</div>
 					<div class="item-value">
 						<button id="acdcSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
 					</div>
 				</div>
 				<input id='acdc' type="hidden" value='' class='param'></input>
+
+				<div class="item-div mui-table-view-cell">
+					<div class="item-name">所属整流器</div>
+					<div class="item-value">
+						<button id="rectifier_codeSel" class="mui-btn mui-btn-block mybtn2">请选择</button>
+					</div>
+				</div>
+				<input id='rectifier_code' type="hidden" value='' class='param'></input>
 
 				<div class="item-div mui-table-view-cell">
 					<div class="item-name">启用日期</div>
@@ -261,6 +277,120 @@
 				} else {
 					mui.alert(resp.respMsg, "提示", null);
 				}
+			}
+		</script>
+
+		<!--添加UPS-->
+		<script>
+			document.getElementById('ups_codeSel').addEventListener('tap', function() {
+				requestUPSList();
+			}, false);
+
+			function requestUPSList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在查询配柜...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/upsInterController/queryUps.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseUPSList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseUPSList(resp) {
+				var items = [];
+				for(var i = 0; i < resp.list.length; i++) {
+					items.push({
+						value: resp.list[i].ups_code,
+						text: resp.list[i].ups_code
+					});
+				}
+
+				var userPicker1 = new mui.PopPicker();
+				userPicker1.setData(items);
+
+				userPicker1.show(function(items) {
+					document.getElementById('ups_codeSel').innerHTML = items[0].text;
+					document.getElementById('ups_code').value = items[0].value;
+				});
+			}
+		</script>
+
+		<!--添加整流器-->
+		<script>
+			document.getElementById('rectifier_codeSel').addEventListener('tap', function() {
+				requestRectifierList();
+			}, false);
+
+			function requestRectifierList() {
+				checkNetwork();
+
+				mui.plusReady(function() {
+					plus.nativeUI.showWaiting("正在查询配柜...");
+
+					var info = getValue();
+					info['userName'] = window.localStorage.getItem(SaveUserName);
+					info['engineroom_id'] = window.localStorage.getItem(Engineroom_id);
+
+					var url = getHost() + "/rectifierInterController/queryRectifier.json";
+					mui.ajax(url, {
+						dataType: 'json',
+						data: JSON.stringify(info),
+						type: 'post',
+						timeout: TIMEOUT,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							plus.nativeUI.closeWaiting();
+
+							responseRectifierList(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.closeWaiting();
+							mui.toast(getHttpErrorDesp(type));
+						}
+					});
+				});
+			}
+
+			function responseRectifierList(resp) {
+				var items = [];
+				for(var i = 0; i < resp.list.length; i++) {
+					items.push({
+						value: resp.list[i].rectifier_code,
+						text: resp.list[i].rectifier_code
+					});
+				}
+
+				var userPicker1 = new mui.PopPicker();
+				userPicker1.setData(items);
+
+				userPicker1.show(function(items) {
+					document.getElementById('rectifier_codeSel').innerHTML = items[0].text;
+					document.getElementById('rectifier_code').value = items[0].value;
+				});
 			}
 		</script>
 
